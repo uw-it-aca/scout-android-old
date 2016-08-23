@@ -1,19 +1,12 @@
-package edu.uw.scout;
+package edu.uw.scout.activities;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -22,21 +15,19 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.basecamp.turbolinks.TurbolinksAdapter;
 import com.basecamp.turbolinks.TurbolinksSession;
 import com.basecamp.turbolinks.TurbolinksView;
 
-import java.util.ArrayList;
-
 import butterknife.BindArray;
 import butterknife.ButterKnife;
+import edu.uw.scout.R;
+import edu.uw.scout.utils.URLUtils;
 
 public class MainActivity extends AppCompatActivity implements TurbolinksAdapter {
 
 
-    private static final String BASE_URL = "http://curry.aca.uw.edu:8001/h/seattle/";
     private static final String INTENT_URL = "intentUrl";
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private String location;
@@ -44,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements TurbolinksAdapter
     private TurbolinksView turbolinksView;
     private TabLayout tabLayout;
     @BindArray(R.array.scout_tabs) String[] scoutTabs;
-    DemoCollectionPagerAdapter demoCollectionPagerAdapter;
+    ScoutViewAdapter demoCollectionPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements TurbolinksAdapter
 
 
         demoCollectionPagerAdapter =
-                new DemoCollectionPagerAdapter(
+                new ScoutViewAdapter(
                         getSupportFragmentManager());
         viewPager.setAdapter(demoCollectionPagerAdapter);
 
@@ -83,18 +74,15 @@ public class MainActivity extends AppCompatActivity implements TurbolinksAdapter
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
+    protected void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG , "onResume!");
+        for(int i = 0; i < viewPager.getAdapter().getCount(); i++){
+            ScoutViewFragment fragment = (ScoutViewFragment) ((ScoutViewAdapter) viewPager.getAdapter()).getItem(i);
 
-        // Since the webView is shared between activities, we need to tell Turbolinks
-        // to load the location from the previous activity upon restarting
-        /*
-        TurbolinksSession.getDefault(this)
-                .activity(this)
-                .adapter(this)
-                .restoreWithCachedSnapshot(true)
-                .view(turbolinksView)
-                .visit(location);*/
+            if(fragment.getContext() != null)
+                fragment.onResume();
+        }
     }
 
     @Override
@@ -113,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements TurbolinksAdapter
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
 
@@ -154,18 +143,17 @@ public class MainActivity extends AppCompatActivity implements TurbolinksAdapter
 
     // Since this is an object collection, use a FragmentStatePagerAdapter,
     // and NOT a FragmentPagerAdapter.
-    public class DemoCollectionPagerAdapter extends FragmentStatePagerAdapter {
+    public class ScoutViewAdapter extends FragmentStatePagerAdapter {
 
-        public DemoCollectionPagerAdapter(FragmentManager fm) {
+        public ScoutViewAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public Fragment getItem(int i) {
-            Fragment fragment = new DemoObjectFragment();
+            Fragment fragment = new ScoutViewFragment();
             Bundle args = new Bundle();
-            String tabURL = URLUtils.getTabURL(getApplicationContext(), i);
-            args.putString(DemoObjectFragment.URL, tabURL);
+            args.putInt(ScoutViewFragment.TAB_ID, i);
             fragment.setArguments(args);
             return fragment;
         }
@@ -187,25 +175,38 @@ public class MainActivity extends AppCompatActivity implements TurbolinksAdapter
 
     // Instances of this class are fragments representing a single
     // object in our collection.
-    public static class DemoObjectFragment extends Fragment implements TurbolinksAdapter{
-        public static final String URL = "turbolinks_url";
+    public static class ScoutViewFragment extends Fragment implements TurbolinksAdapter{
+        public static final String TAB_ID = "tab_id";
         private TurbolinksView turbolinksView;
+        private TurbolinksSession turbolinksSession;
+
         @Override
         public View onCreateView(LayoutInflater inflater,
                                  ViewGroup container, Bundle savedInstanceState) {
+
             // The last two arguments ensure LayoutParams are inflated
             // properly.
             View rootView = inflater.inflate(
                     R.layout.fragment_collection_object, container, false);
             turbolinksView = (TurbolinksView) rootView.findViewById(R.id.turbolinks_view);
-
-            TurbolinksSession.getNew(getContext())
-                    .activity(getActivity())
-                    .adapter(this)
-                    .view(turbolinksView)
-                    .visit(getArguments().getString(URL, BASE_URL));
+            turbolinksSession = TurbolinksSession.getNew(getContext());
 
             return rootView;
+        }
+
+        @Override
+        public void onResume(){
+            super.onResume();
+
+            int tabId = getArguments().getInt(TAB_ID);
+            String tabURL = URLUtils.getTabURL(getContext() , tabId);
+
+            Log.d(LOG_TAG , "Tab URL : " + tabURL);
+
+            turbolinksSession.activity(getActivity())
+                    .adapter(this)
+                    .view(turbolinksView)
+                    .visit(tabURL);
         }
 
         @Override
@@ -235,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements TurbolinksAdapter
 
         @Override
         public void visitProposedToLocationWithAction(String location, String action) {
-            Intent intent = new Intent(getActivity(), MainActivity.class);
+            Intent intent = new Intent(getActivity(), DetailActivity.class);
             intent.putExtra(INTENT_URL, location);
             this.startActivity(intent);
         }
