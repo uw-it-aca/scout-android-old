@@ -177,6 +177,7 @@ public class MainActivity extends AppCompatActivity implements TurbolinksAdapter
     // object in our collection.
     public static class ScoutViewFragment extends Fragment implements TurbolinksAdapter{
         public static final String TAB_ID = "tab_id";
+        private String url;
         private TurbolinksView turbolinksView;
         private TurbolinksSession turbolinksSession;
 
@@ -199,14 +200,19 @@ public class MainActivity extends AppCompatActivity implements TurbolinksAdapter
             super.onResume();
 
             int tabId = getArguments().getInt(TAB_ID);
-            String tabURL = URLUtils.getTabURL(getContext() , tabId);
+            String tabURL =  URLUtils.getTabURL(getContext() , tabId);
 
-            Log.d(LOG_TAG , "Tab URL : " + tabURL);
+            if(url != null && url.equals(tabURL))
+                return;
+
+            url = tabURL;
+
+            Log.d(LOG_TAG , "Tab URL : " + url);
 
             turbolinksSession.activity(getActivity())
                     .adapter(this)
                     .view(turbolinksView)
-                    .visit(tabURL);
+                    .visit(url);
         }
 
         @Override
