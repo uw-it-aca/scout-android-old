@@ -6,7 +6,8 @@ import android.util.Log;
 import edu.uw.scout.R;
 
 /**
- * Created by ezturner on 8/26/16.
+ * This class manages user preferences, notably surrounding the campus, campus URL and whether
+ * the user has opened the app before.
  */
 public class UserPreferences {
 
@@ -22,9 +23,12 @@ public class UserPreferences {
     public UserPreferences(Context context){
         instance = this;
         applicationContext = context;
-        Log.d(LOG_TAG , "UserPreferences created");
     }
 
+    /**
+     * Retrieves the base url of the campus.
+     * @return the campus url
+     */
     public String getCampusURL(){
         String baseURL = applicationContext.getResources().getString(R.string.scout_url);
 
@@ -39,11 +43,17 @@ public class UserPreferences {
         PrefUtils.saveToPrefs(applicationContext, PrefUtils.PREF_CAMPUS, campus);
     }
 
+    /**
+     * Sets the campus by the index of the String array campus
+     */
     public void setCampusByIndex(int index){
         String[] campuses = applicationContext.getResources().getStringArray(R.array.campus);
         PrefUtils.saveToPrefs(applicationContext, PrefUtils.PREF_CAMPUS, campuses[index]);
     }
 
+    /**
+     * Retrieves the index of the campus selected in terms of the campus string aray
+     */
     public int getCampusSelectedIndex(){
         String campus = PrefUtils.getFromPrefs(applicationContext, PrefUtils.PREF_CAMPUS, "seattle");
 
@@ -66,6 +76,8 @@ public class UserPreferences {
     }
 
     public boolean hasUserOpenedApp(){
-        return PrefUtils.getFromPrefs(applicationContext, PrefUtils.PREF_HAS_OPENED_APP_KEY, false);
+        boolean hasOpened =PrefUtils.getFromPrefs(applicationContext, PrefUtils.PREF_HAS_OPENED_APP_KEY, false);
+        PrefUtils.saveToPrefs(applicationContext, PrefUtils.PREF_HAS_OPENED_APP_KEY, true);
+        return hasOpened;
     }
 }

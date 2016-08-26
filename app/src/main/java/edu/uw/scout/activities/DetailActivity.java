@@ -17,6 +17,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import edu.uw.scout.R;
 
+/**
+ * This class is a detail view, for individual Spaces/tech items.
+ */
 public class DetailActivity extends ScoutActivity{
 
     private static final String INTENT_URL = "intentUrl";
@@ -48,6 +51,9 @@ public class DetailActivity extends ScoutActivity{
                 .visit(location);
     }
 
+    /**
+     * Upon page load, set the ActionBar title to the page title
+     */
     @Override
     public void visitCompleted() {
         String pageTitle = TurbolinksSession.getDefault(this).getWebView().getTitle();
@@ -57,6 +63,9 @@ public class DetailActivity extends ScoutActivity{
             actionBar.setTitle(pageTitle);
     }
 
+    /**
+     * Visits the URI provided with the Android system interpreter.
+     */
     @Override
     public void visitProposedToLocationWithAction(String location, String action) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(location));

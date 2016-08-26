@@ -6,10 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 /**
- * Created by ezturner on 8/26/16.
+ * This adapter handles the tab instances for MainActivity.
  */
-// Since this is an object collection, use a FragmentStatePagerAdapter,
-// and NOT a FragmentPagerAdapter.
 public class ScoutTabFragmentAdapter extends FragmentStatePagerAdapter {
 
     private String[] scoutTabs;

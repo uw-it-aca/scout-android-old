@@ -43,18 +43,13 @@ public class MainActivity extends ScoutActivity {
         viewPager.setAdapter(scoutTabAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
-        showCampusChooser();
-
+        if(!userPreferences.hasUserOpenedApp())
+            showCampusChooser();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        reloadTabs();
-    }
-
-    private void reloadTabs(){
 
         for(int i = 0; i < scoutTabAdapter.getCount(); i++){
             ScoutTabFragment fragment = (ScoutTabFragment) scoutTabAdapter.getItem(i);
@@ -94,7 +89,9 @@ public class MainActivity extends ScoutActivity {
         this.startActivity(intent);
     }
 
-
+    /**
+     * Shows a MaterialDialog that allows the user to select a campus
+     */
     private void showCampusChooser(){
         int campusIndexSelected = userPreferences.getCampusSelectedIndex();
         new MaterialDialog.Builder(this)

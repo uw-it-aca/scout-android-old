@@ -8,7 +8,8 @@ import com.basecamp.turbolinks.TurbolinksAdapter;
 import edu.uw.scout.utils.UserPreferences;
 
 /**
- * Created by ezturner on 8/26/16.
+ * A superclass for turbolinks activities containing common variables and implementing stub
+ * methods for TurbolinksAdapter.
  */
 public class ScoutActivity extends AppCompatActivity implements TurbolinksAdapter{
 

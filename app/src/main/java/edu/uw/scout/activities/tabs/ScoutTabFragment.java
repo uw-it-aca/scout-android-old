@@ -19,10 +19,8 @@ import edu.uw.scout.activities.ScoutActivity;
 import edu.uw.scout.utils.UserPreferences;
 
 /**
- * Created by ezturner on 8/26/16.
+ * This tab fragment handles a single tab, either Discover, Food, Study or Tech.
  */
-// Instances of this class are fragments representing a single
-// object in our collection.
 public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
     public static final String TAB_ID = "tab_id";
     private static final String LOG_TAG = ScoutTabFragment.class.getSimpleName();
