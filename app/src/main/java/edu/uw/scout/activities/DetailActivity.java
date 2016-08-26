@@ -1,5 +1,6 @@
 package edu.uw.scout.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,54 +13,39 @@ import com.basecamp.turbolinks.TurbolinksAdapter;
 import com.basecamp.turbolinks.TurbolinksSession;
 import com.basecamp.turbolinks.TurbolinksView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import edu.uw.scout.R;
 
-public class DetailActivity extends AppCompatActivity implements TurbolinksAdapter{
+public class DetailActivity extends ScoutActivity{
 
-    private static final String BASE_URL = "https://scout-test.s.uw.edu/h/seattle/";
     private static final String INTENT_URL = "intentUrl";
     private static final String LOG_TAG = DetailActivity.class.getSimpleName();
     private String location;
-    private TurbolinksView turbolinksView;
+    @BindView(R.id.turbolinks_view) TurbolinksView turbolinksView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        ButterKnife.bind(this);
 
         turbolinksView = (TurbolinksView) findViewById(R.id.turbolinks_view);
 
-        location = getIntent().getStringExtra(INTENT_URL) != null ? getIntent().getStringExtra(INTENT_URL) : BASE_URL;
+        location = getIntent().getStringExtra(INTENT_URL);
 
-        TurbolinksSession.getDefault(this).progressView(LayoutInflater.from(this).inflate(com.basecamp.turbolinks.R.layout.turbolinks_progress, turbolinksView, false), com.basecamp.turbolinks.R.id.turbolinks_default_progress_indicator,Integer.MAX_VALUE)
+        TurbolinksSession.getDefault(this).progressView(LayoutInflater.from(this).inflate(com.basecamp.turbolinks.R.layout.turbolinks_progress, turbolinksView, false), com.basecamp.turbolinks.R.id.turbolinks_default_progress_indicator, Integer.MAX_VALUE)
                 .activity(this)
                 .adapter(this)
                 .view(turbolinksView)
                 .visit(location);
-    }
-
-    @Override
-    public void onPageFinished() {
-
-    }
-
-    @Override
-    public void onReceivedError(int errorCode) {
-
-    }
-
-    @Override
-    public void pageInvalidated() {
-
-    }
-
-    @Override
-    public void requestFailedWithStatusCode(int statusCode) {
-
     }
 
     @Override

@@ -9,7 +9,11 @@ import java.util.Set;
 /**
  * Created by ezturner on 8/23/16.
  */
-public class PrefUtils {
+class PrefUtils {
+    /**
+     * The portion of the URL representing a single campus.
+     * Example: "seattle/"
+     */
     public final static String PREF_CAMPUS = "__pref_campus__";
     public final static String PREF_HAS_OPENED_APP_KEY = "__OPENED__";
 
