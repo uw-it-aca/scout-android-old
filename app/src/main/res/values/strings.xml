@@ -1,4 +1,58 @@
 <resources>
     <string name="app_name">Scout</string>
     <string name="action_settings">Settings</string>
+
+    <string name="scout_url">https://scout-test.s.uw.edu/h/</string>
+
+    <array name="scout_tabs">
+        <item>H</item>
+        <item>F</item>
+        <item>S</item>
+        <item>T</item>
+    </array>
+
+    <string name="base_url">http://curry.aca.uw.edu:8001/h/</string>
+
+    <array name="campus">
+        <item>Seattle</item>
+        <item>Bothell</item>
+        <item>Tacoma</item>
+    </array>
+
+    <array name="scout_tab_urls">
+        <item></item>
+        <item>food/</item>
+        <item>study/</item>
+        <item>tech/</item>
+    </array>
+
+    <string name="title_activity_detail">Scout</string>
+
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_campus">Campus</string>
+
+
+    <string name="pref_campus_key">__pref_campus__</string>
+    <string name="pref_title_campus">Campus</string>
+    <string name="choose_campus">Campus</string>
+    <string name="campus_chooser_negative_text">Cancel</string>
+    <string name="campus_chooser_positive_text">Choose</string>
+
+    <array name="pref_campus_list_titles">
+        <item>Seattle</item>
+        <item>Bothell</item>
+        <item>Tacoma</item>
+    </array>
+
+    <array name="pref_campus_list_values">
+        <item>seattle</item>
+        <item>bothell</item>
+        <item>tacoma</item>
+    </array>
+
+
 </resources>
