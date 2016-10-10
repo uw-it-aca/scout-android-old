@@ -14,6 +14,7 @@ import com.basecamp.turbolinks.TurbolinksSession;
 import com.basecamp.turbolinks.TurbolinksView;
 
 import edu.uw.scout.R;
+import edu.uw.scout.activities.CONSTANTS;
 import edu.uw.scout.activities.DetailActivity;
 import edu.uw.scout.activities.ScoutActivity;
 import edu.uw.scout.utils.UserPreferences;
@@ -93,7 +94,7 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
     @Override
     public void visitProposedToLocationWithAction(String location, String action) {
         Intent intent = new Intent(getActivity(), DetailActivity.class);
-        intent.putExtra(ScoutActivity.INTENT_URL_KEY, location);
+        intent.putExtra(CONSTANTS.INTENT_URL_KEY, location);
         this.startActivity(intent);
     }
 

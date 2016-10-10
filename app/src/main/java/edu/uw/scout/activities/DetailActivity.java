@@ -22,7 +22,6 @@ import edu.uw.scout.R;
  */
 public class DetailActivity extends ScoutActivity{
 
-    private static final String INTENT_URL = "intentUrl";
     private static final String LOG_TAG = DetailActivity.class.getSimpleName();
     private String location;
     @BindView(R.id.turbolinks_view) TurbolinksView turbolinksView;
@@ -42,7 +41,7 @@ public class DetailActivity extends ScoutActivity{
 
         turbolinksView = (TurbolinksView) findViewById(R.id.turbolinks_view);
 
-        location = getIntent().getStringExtra(INTENT_URL);
+        location = getIntent().getStringExtra(CONSTANTS.INTENT_URL_KEY);
 
         TurbolinksSession.getDefault(this).progressView(LayoutInflater.from(this).inflate(com.basecamp.turbolinks.R.layout.turbolinks_progress, turbolinksView, false), com.basecamp.turbolinks.R.id.turbolinks_default_progress_indicator, Integer.MAX_VALUE)
                 .activity(this)

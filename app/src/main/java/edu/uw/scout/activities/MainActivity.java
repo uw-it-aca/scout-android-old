@@ -85,7 +85,7 @@ public class MainActivity extends ScoutActivity {
     @Override
     public void visitProposedToLocationWithAction(String location, String action) {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(INTENT_URL_KEY, location);
+        intent.putExtra(CONSTANTS.INTENT_URL_KEY, location);
         this.startActivity(intent);
     }
 
