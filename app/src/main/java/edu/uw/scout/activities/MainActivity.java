@@ -46,8 +46,9 @@ public class MainActivity extends ScoutActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         ButterKnife.bind(this);
+
+        handler = new Handler();
 
         if(savedInstanceState != null) {
             if (savedInstanceState.containsKey(CAMPUS_INDEX))
@@ -74,6 +75,8 @@ public class MainActivity extends ScoutActivity {
             Log.d(LOG_TAG , "Tab missing!");
         }
 
+        tabLayout.addOnTabSelectedListener(tabChangedListener);
+
         // If we are on discover, hide the filter button
         Log.d(LOG_TAG , "onCreate Called");
 
@@ -91,13 +94,16 @@ public class MainActivity extends ScoutActivity {
         @Override
         public void run() {
             if(menu != null && tabLayout.getSelectedTabPosition() == 0){
-                menu.getItem(0).setVisible(false);
+                setFilterIconVisible(false);
             } else if(menu == null){
                 handler.postDelayed(hideFilterIcon, 50);
             }
         }
     };
 
+    private void setFilterIconVisible(boolean isVisible){
+        menu.getItem(0).setVisible(isVisible);
+    }
     @Override
     protected void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
@@ -155,13 +161,9 @@ public class MainActivity extends ScoutActivity {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
         } else if(id == R.id.action_filter){
-            if(tabLayout.getSelectedTabPosition() != 0){
-                Intent filterIntent = new Intent(this, FilterActivity.class);
-                filterIntent.putExtra(CONSTANTS.INTENT_URL_KEY, getFilterURL());
-            } else {
-                Toast toast = Toast.makeText(this, "You cannot filter discover!" , Toast.LENGTH_LONG);
-                toast.show();
-            }
+            Intent filterIntent = new Intent(this, FilterActivity.class);
+            filterIntent.putExtra(CONSTANTS.INTENT_URL_KEY, getFilterURL());
+            startActivity(filterIntent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -233,4 +235,22 @@ public class MainActivity extends ScoutActivity {
         }
         return campusURL + "study/filter/";
     }
+
+
+    private TabLayout.OnTabSelectedListener tabChangedListener = new TabLayout.OnTabSelectedListener() {
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+            setFilterIconVisible(tab.getPosition() != 0);
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+            setFilterIconVisible(tab.getPosition() != 0);
+        }
+    };
 }
