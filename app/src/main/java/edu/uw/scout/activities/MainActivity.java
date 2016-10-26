@@ -2,6 +2,7 @@ package edu.uw.scout.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
@@ -34,6 +36,8 @@ public class MainActivity extends ScoutActivity {
     private int campusIndex = -1;
     private int tabPosition = -1;
     private ScoutTabFragmentAdapter scoutTabAdapter;
+    private Menu menu;
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,7 @@ public class MainActivity extends ScoutActivity {
         viewPager.setAdapter(scoutTabAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
+        // Set the tab icons
         try {
             tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_white_24dp);
             tabLayout.getTabAt(1).setIcon(R.drawable.ic_restaurant_white_24dp);
@@ -69,11 +74,29 @@ public class MainActivity extends ScoutActivity {
             Log.d(LOG_TAG , "Tab missing!");
         }
 
+        // If we are on discover, hide the filter button
         Log.d(LOG_TAG , "onCreate Called");
 
-        if(!userPreferences.hasUserOpenedApp())
+        // If the user has not opened the app, show the campus chooser.
+        if(!userPreferences.hasUserOpenedApp()) {
             showCampusChooser();
+        } else {
+            campusIndex = UserPreferences.getInstance().getCampusSelectedIndex();
+        }
+
+        handler.postDelayed(hideFilterIcon, 50);
     }
+
+    private Runnable hideFilterIcon = new Runnable() {
+        @Override
+        public void run() {
+            if(menu != null && tabLayout.getSelectedTabPosition() == 0){
+                menu.getItem(0).setVisible(false);
+            } else if(menu == null){
+                handler.postDelayed(hideFilterIcon, 50);
+            }
+        }
+    };
 
     @Override
     protected void onSaveInstanceState(Bundle outState){
@@ -114,6 +137,7 @@ public class MainActivity extends ScoutActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
@@ -130,6 +154,14 @@ public class MainActivity extends ScoutActivity {
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
+        } else if(id == R.id.action_filter){
+            if(tabLayout.getSelectedTabPosition() != 0){
+                Intent filterIntent = new Intent(this, FilterActivity.class);
+                filterIntent.putExtra(CONSTANTS.INTENT_URL_KEY, getFilterURL());
+            } else {
+                Toast toast = Toast.makeText(this, "You cannot filter discover!" , Toast.LENGTH_LONG);
+                toast.show();
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -160,6 +192,7 @@ public class MainActivity extends ScoutActivity {
         @Override
         public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
             if(which != -1) {
+                campusIndex = which;
                 userPreferences.setCampusByIndex(which);
                 onPause();
                 onResume();
@@ -188,4 +221,16 @@ public class MainActivity extends ScoutActivity {
     }
 
 
+    public String getFilterURL() {
+        String campusURL = UserPreferences.getInstance().getCampusURL();
+        switch (tabLayout.getSelectedTabPosition()){
+            case 1:
+                return campusURL + "food/filter/";
+            case 2:
+                return campusURL + "study/filter/";
+            case 3:
+                return campusURL + "tech/filter/";
+        }
+        return campusURL + "study/filter/";
+    }
 }

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Scout</string>
     <string name="action_settings">Settings</string>
+    <string name="action_filter">Filter</string>
 
     <string name="scout_url">http://curry.aca.uw.edu:8001/h/</string>
 
