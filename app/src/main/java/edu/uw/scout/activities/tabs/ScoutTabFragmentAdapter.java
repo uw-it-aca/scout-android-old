@@ -1,5 +1,6 @@
 package edu.uw.scout.activities.tabs;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -33,10 +34,6 @@ public class ScoutTabFragmentAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        if (position >= 0 && position < scoutTabs.length) {
-            return scoutTabs[position];
-        } else {
-            return "Scout Tab";
-        }
+        return "";
     }
 }

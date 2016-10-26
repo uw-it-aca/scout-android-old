@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,16 +18,21 @@ import butterknife.ButterKnife;
 import edu.uw.scout.R;
 import edu.uw.scout.activities.tabs.ScoutTabFragment;
 import edu.uw.scout.activities.tabs.ScoutTabFragmentAdapter;
+import edu.uw.scout.utils.UserPreferences;
 
 public class MainActivity extends ScoutActivity {
 
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
+    private static final String CAMPUS_INDEX = "campus";
+    private static final String TAB_POSITION = "tabPos";
     @BindView(R.id.viewPager) ViewPager viewPager;
     @BindView(R.id.tabLayout) TabLayout tabLayout;
     @BindArray(R.array.scout_tabs) String[] scoutTabs;
 
+    private int campusIndex = -1;
+    private int tabPosition = -1;
     private ScoutTabFragmentAdapter scoutTabAdapter;
 
     @Override
@@ -39,24 +45,71 @@ public class MainActivity extends ScoutActivity {
 
         ButterKnife.bind(this);
 
+        if(savedInstanceState != null) {
+            if (savedInstanceState.containsKey(CAMPUS_INDEX))
+                campusIndex = savedInstanceState.getInt(CAMPUS_INDEX);
+
+
+            if (savedInstanceState.containsKey(TAB_POSITION))
+                tabPosition = savedInstanceState.getInt(TAB_POSITION);
+        } else {
+            Log.d(LOG_TAG, "No savedInstanceState!");
+        }
+
         scoutTabAdapter = new ScoutTabFragmentAdapter(getSupportFragmentManager(), scoutTabs);
         viewPager.setAdapter(scoutTabAdapter);
         tabLayout.setupWithViewPager(viewPager);
+
+        try {
+            tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_white_24dp);
+            tabLayout.getTabAt(1).setIcon(R.drawable.ic_restaurant_white_24dp);
+            tabLayout.getTabAt(2).setIcon(R.drawable.ic_local_library_white_24dp);
+            tabLayout.getTabAt(3).setIcon(R.drawable.ic_computer_white_24dp);
+        } catch (NullPointerException e){
+            Log.d(LOG_TAG , "Tab missing!");
+        }
+
+        Log.d(LOG_TAG , "onCreate Called");
 
         if(!userPreferences.hasUserOpenedApp())
             showCampusChooser();
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+
+        outState.putInt(CAMPUS_INDEX, UserPreferences.getInstance().getCampusSelectedIndex());
+        outState.putInt(TAB_POSITION, viewPager.getCurrentItem());
+        Log.d(LOG_TAG, "Saving instance state!");
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        Log.d(LOG_TAG, "Pausing view!");
+        campusIndex = UserPreferences.getInstance().getCampusSelectedIndex();
+        tabPosition = viewPager.getCurrentItem();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        Log.d(LOG_TAG, "Resuming! " + campusIndex + " ,  " + tabPosition);
 
-        for(int i = 0; i < scoutTabAdapter.getCount(); i++){
-            ScoutTabFragment fragment = (ScoutTabFragment) scoutTabAdapter.getItem(i);
+        if(campusIndex != -1) {
+            if(campusIndex != UserPreferences.getInstance().getCampusSelectedIndex()) {
+                for (int i = 0; i < scoutTabAdapter.getCount(); i++) {
+                    ScoutTabFragment fragment = (ScoutTabFragment) scoutTabAdapter.getItem(i);
 
-            if(fragment.getActivity() != null)
-                fragment.reloadTab();
+                    if (fragment.getActivity() != null)
+                        fragment.reloadTab();
+                }
+            }
         }
+
+        if(tabPosition != -1)
+            viewPager.setCurrentItem(tabPosition);
     }
 
     @Override
@@ -117,6 +170,22 @@ public class MainActivity extends ScoutActivity {
         }
     };
 
+    @Override
+    protected void onStop(){
+        super.onStop();
+        Log.d(LOG_TAG , "Stopping!");
+    }
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        Log.d(LOG_TAG , "onRestart");
+    }
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        Log.d(LOG_TAG , "destroyed");
+    }
 
 
 }
