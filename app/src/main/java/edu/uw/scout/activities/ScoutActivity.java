@@ -18,7 +18,7 @@ public class ScoutActivity extends AppCompatActivity implements TurbolinksAdapte
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        userPreferences = UserPreferences.getInstance();
+        userPreferences = new UserPreferences(this);
     }
 
     @Override

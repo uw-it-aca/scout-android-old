@@ -75,6 +75,7 @@ public class MainActivity extends ScoutActivity {
             Log.d(LOG_TAG , "Tab missing!");
         }
 
+
         tabLayout.addOnTabSelectedListener(tabChangedListener);
 
         // If we are on discover, hide the filter button
@@ -84,7 +85,7 @@ public class MainActivity extends ScoutActivity {
         if(!userPreferences.hasUserOpenedApp()) {
             showCampusChooser();
         } else {
-            campusIndex = UserPreferences.getInstance().getCampusSelectedIndex();
+            campusIndex = userPreferences.getCampusSelectedIndex();
         }
 
         handler.postDelayed(hideFilterIcon, 50);
@@ -108,7 +109,7 @@ public class MainActivity extends ScoutActivity {
     protected void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
 
-        outState.putInt(CAMPUS_INDEX, UserPreferences.getInstance().getCampusSelectedIndex());
+        outState.putInt(CAMPUS_INDEX, userPreferences.getCampusSelectedIndex());
         outState.putInt(TAB_POSITION, viewPager.getCurrentItem());
         Log.d(LOG_TAG, "Saving instance state!");
     }
@@ -117,7 +118,7 @@ public class MainActivity extends ScoutActivity {
     protected void onPause(){
         super.onPause();
         Log.d(LOG_TAG, "Pausing view!");
-        campusIndex = UserPreferences.getInstance().getCampusSelectedIndex();
+        campusIndex = userPreferences.getCampusSelectedIndex();
         tabPosition = viewPager.getCurrentItem();
     }
 
@@ -127,7 +128,7 @@ public class MainActivity extends ScoutActivity {
         Log.d(LOG_TAG, "Resuming! " + campusIndex + " ,  " + tabPosition);
 
         if(campusIndex != -1) {
-            if(campusIndex != UserPreferences.getInstance().getCampusSelectedIndex()) {
+            if(campusIndex != userPreferences.getCampusSelectedIndex()) {
                 for (int i = 0; i < scoutTabAdapter.getCount(); i++) {
                     ScoutTabFragment fragment = (ScoutTabFragment) scoutTabAdapter.getItem(i);
 
@@ -224,7 +225,7 @@ public class MainActivity extends ScoutActivity {
 
 
     public String getFilterURL() {
-        String campusURL = UserPreferences.getInstance().getCampusURL();
+        String campusURL = userPreferences.getCampusURL();
         switch (tabLayout.getSelectedTabPosition()){
             case 1:
                 return campusURL + "food/filter/";

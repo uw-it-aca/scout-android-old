@@ -7,6 +7,11 @@ import android.preference.PreferenceManager;
 import java.util.Set;
 
 /**
+ * This class utilizes the SharedPreferences API to save user preferences.
+ * If you would like to add another preference, just add a key and use the appropriatly typed
+ * method.
+ *
+ * API reference : https://developer.android.com/reference/android/content/SharedPreferences.html
  * Created by ezturner on 8/23/16.
  */
 class PrefUtils {
@@ -14,8 +19,8 @@ class PrefUtils {
      * The portion of the URL representing a single campus.
      * Example: "seattle/"
      */
-    public final static String PREF_CAMPUS = "__pref_campus__";
-    public final static String PREF_HAS_OPENED_APP_KEY = "__OPENED__";
+    final static String PREF_CAMPUS = "__pref_campus__";
+    final static String PREF_HAS_OPENED_APP_KEY = "__OPENED__";
 
     /**
      * Called to save supplied value in shared preferences against given key.

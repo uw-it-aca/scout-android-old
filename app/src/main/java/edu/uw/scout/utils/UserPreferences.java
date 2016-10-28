@@ -12,16 +12,10 @@ import edu.uw.scout.R;
 public class UserPreferences {
 
     private static final String LOG_TAG = UserPreferences.class.getSimpleName();
-    private static UserPreferences instance;
-
-    public static UserPreferences getInstance(){
-        return instance;
-    }
 
     private Context applicationContext;
 
     public UserPreferences(Context context){
-        instance = this;
         applicationContext = context;
     }
 
@@ -70,11 +64,20 @@ public class UserPreferences {
         return -1;
     }
 
+    /**
+     * Retreives the URL for a given tab index on the MainActivity
+     * @param tab
+     * @return
+     */
     public String getTabURL(int tab){
         String[] tabs = applicationContext.getResources().getStringArray(R.array.scout_tab_urls);
         return getCampusURL() + tabs[tab];
     }
 
+    /**
+     * Return whether the user has opened the app before. Use this for onboarding checks.
+     * @return userHasOpenedApp
+     */
     public boolean hasUserOpenedApp(){
         boolean hasOpened =PrefUtils.getFromPrefs(applicationContext, PrefUtils.PREF_HAS_OPENED_APP_KEY, false);
         PrefUtils.saveToPrefs(applicationContext, PrefUtils.PREF_HAS_OPENED_APP_KEY, true);
