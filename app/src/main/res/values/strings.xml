@@ -45,6 +45,7 @@
     <string name="choose_campus">Campus</string>
     <string name="campus_chooser_negative_text">Cancel</string>
     <string name="campus_chooser_positive_text">Choose</string>
+    <string name="action_clear">Clear</string>
 
     <array name="pref_campus_list_titles">
         <item>Seattle</item>

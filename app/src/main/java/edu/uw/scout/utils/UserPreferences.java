@@ -83,4 +83,72 @@ public class UserPreferences {
         PrefUtils.saveToPrefs(applicationContext, PrefUtils.PREF_HAS_OPENED_APP_KEY, true);
         return hasOpened;
     }
+
+    /**
+     * Returns the food filter saved in the SharedPreferences, returns an empty string otherwise
+     * @return foodFilter
+     */
+    public String getFoodFilter(){
+        return getFilter(PrefUtils.PREF_TECH_FILTER, PrefUtils.PREF_TECH_FILTER_TIME);
+    }
+
+    /**
+     * Returns the food filter saved in the SharedPreferences, returns an empty string otherwise
+     * @return foodFilter
+     */
+    public String getStudyFilter(){
+        return getFilter(PrefUtils.PREF_TECH_FILTER, PrefUtils.PREF_TECH_FILTER_TIME);
+    }
+
+    /**
+     * Returns the food filter saved in the SharedPreferences, returns an empty string otherwise
+     * @return foodFilter
+     */
+    public String getTechFilter(){
+        return getFilter(PrefUtils.PREF_TECH_FILTER, PrefUtils.PREF_TECH_FILTER_TIME);
+    }
+
+    public void saveStudyFilter(String filters){
+        if(filters == null)
+            throw new IllegalArgumentException("Filters cannot be null! Pass an empty string instead");
+
+        PrefUtils.saveToPrefs(applicationContext, PrefUtils.PREF_STUDY_FILTER, filters);
+        PrefUtils.saveToPrefs(applicationContext, PrefUtils.PREF_STUDY_FILTER_TIME, System.currentTimeMillis());
+    }
+
+    public void saveFoodFilter(String filters){
+        if(filters == null)
+            throw new IllegalArgumentException("Filters cannot be null! Pass an empty string instead");
+
+        PrefUtils.saveToPrefs(applicationContext, PrefUtils.PREF_FOOD_FILTER, filters);
+        PrefUtils.saveToPrefs(applicationContext, PrefUtils.PREF_FOOD_FILTER_TIME, System.currentTimeMillis());
+    }
+
+    public void saveTechFilter(String filters){
+        if(filters == null)
+            throw new IllegalArgumentException("Filters cannot be null! Pass an empty string instead");
+
+        PrefUtils.saveToPrefs(applicationContext, PrefUtils.PREF_TECH_FILTER, filters);
+        PrefUtils.saveToPrefs(applicationContext, PrefUtils.PREF_TECH_FILTER_TIME, System.currentTimeMillis());
+    }
+
+    private String getFilter(String filterKey, String filterTimeKey){
+        long time = PrefUtils.getFromPrefs(applicationContext, filterTimeKey, System.currentTimeMillis() - 20 * 60 * 1000);
+
+        // if the filter was saved more than 15 minutes ago then return empty
+        if(time - System.currentTimeMillis() < -1 * (15 * 60 * 1000)){
+            PrefUtils.saveToPrefs(applicationContext, filterKey, "");
+            return "";
+        }
+        return PrefUtils.getFromPrefs(applicationContext, filterKey, "");
+    }
+
+    public void deleteFilters() {
+        PrefUtils.deleteFromPrefs(applicationContext, PrefUtils.PREF_TECH_FILTER);
+        PrefUtils.deleteFromPrefs(applicationContext, PrefUtils.PREF_STUDY_FILTER);
+        PrefUtils.deleteFromPrefs(applicationContext, PrefUtils.PREF_FOOD_FILTER);
+        PrefUtils.deleteFromPrefs(applicationContext, PrefUtils.PREF_TECH_FILTER_TIME);
+        PrefUtils.deleteFromPrefs(applicationContext, PrefUtils.PREF_STUDY_FILTER_TIME);
+        PrefUtils.deleteFromPrefs(applicationContext, PrefUtils.PREF_FOOD_FILTER_TIME);
+    }
 }

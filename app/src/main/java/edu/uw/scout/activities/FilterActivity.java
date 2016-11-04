@@ -1,14 +1,13 @@
 package edu.uw.scout.activities;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.JavascriptInterface;
 
 import com.basecamp.turbolinks.TurbolinksSession;
 import com.basecamp.turbolinks.TurbolinksView;
@@ -23,11 +22,13 @@ public class FilterActivity extends ScoutActivity {
     private String location;
     @BindView(R.id.turbolinks_view)
     TurbolinksView turbolinksView;
+    TurbolinksSession turbolinksSession;
+    private String queryParams;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.activity_filter);
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -41,11 +42,17 @@ public class FilterActivity extends ScoutActivity {
 
         location = getIntent().getStringExtra(CONSTANTS.INTENT_URL_KEY);
 
-        TurbolinksSession.getDefault(this).progressView(LayoutInflater.from(this).inflate(com.basecamp.turbolinks.R.layout.turbolinks_progress, turbolinksView, false), com.basecamp.turbolinks.R.id.turbolinks_default_progress_indicator, Integer.MAX_VALUE)
+        turbolinksSession = TurbolinksSession.getDefault(this);
+        turbolinksSession.addJavascriptInterface(this, "scoutBridge");
+        turbolinksSession.progressView(LayoutInflater.from(this).inflate(com.basecamp.turbolinks.R.layout.turbolinks_progress, turbolinksView, false), com.basecamp.turbolinks.R.id.turbolinks_default_progress_indicator, Integer.MAX_VALUE)
                 .activity(this)
                 .adapter(this)
                 .view(turbolinksView)
                 .visit(location);
+
+
+
+
     }
 
     @Override
@@ -63,7 +70,11 @@ public class FilterActivity extends ScoutActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_done) {
+        if (id == R.id.action_clear) {
+            queryParams = "";
+            onBackPressed();
+            return true;
+        } else if (id == android.R.id.home) {
             onBackPressed();
             return true;
         }
@@ -102,6 +113,12 @@ public class FilterActivity extends ScoutActivity {
      */
     private void submitForm(){
 
+    }
+
+    @JavascriptInterface
+    public void showToast(String params){
+        this.queryParams = params;
+        Log.d(LOG_TAG, params);
     }
 
 }

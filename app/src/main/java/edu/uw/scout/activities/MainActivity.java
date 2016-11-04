@@ -103,7 +103,8 @@ public class MainActivity extends ScoutActivity {
     };
 
     private void setFilterIconVisible(boolean isVisible){
-        menu.getItem(0).setVisible(isVisible);
+        if(menu != null && menu.getItem(0) != null)
+            menu.getItem(0).setVisible(isVisible);
     }
     @Override
     protected void onSaveInstanceState(Bundle outState){
@@ -220,6 +221,9 @@ public class MainActivity extends ScoutActivity {
     @Override
     protected void onDestroy(){
         super.onDestroy();
+
+        if(isFinishing())
+            userPreferences.deleteFilters();
         Log.d(LOG_TAG , "destroyed");
     }
 
