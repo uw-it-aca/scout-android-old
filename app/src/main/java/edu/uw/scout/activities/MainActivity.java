@@ -165,6 +165,7 @@ public class MainActivity extends ScoutActivity {
         } else if(id == R.id.action_filter){
             Intent filterIntent = new Intent(this, FilterActivity.class);
             filterIntent.putExtra(CONSTANTS.INTENT_URL_KEY, getFilterURL());
+            filterIntent.putExtra(CONSTANTS.FILTER_TYPE_KEY, tabLayout.getSelectedTabPosition());
             startActivity(filterIntent);
         }
 

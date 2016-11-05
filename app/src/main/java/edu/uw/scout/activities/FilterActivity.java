@@ -1,5 +1,6 @@
 package edu.uw.scout.activities;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -7,11 +8,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.JavascriptInterface;
 
 import com.basecamp.turbolinks.TurbolinksSession;
 import com.basecamp.turbolinks.TurbolinksView;
 
+import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import edu.uw.scout.R;
@@ -24,6 +27,9 @@ public class FilterActivity extends ScoutActivity {
     TurbolinksView turbolinksView;
     TurbolinksSession turbolinksSession;
     private String queryParams;
+    @BindView(R.id.filter_submit)
+    FloatingActionButton fab;
+    private int filterType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +47,14 @@ public class FilterActivity extends ScoutActivity {
         turbolinksView = (TurbolinksView) findViewById(R.id.turbolinks_view);
 
         location = getIntent().getStringExtra(CONSTANTS.INTENT_URL_KEY);
+        filterType = getIntent().getIntExtra(CONSTANTS.FILTER_TYPE_KEY, 1);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         turbolinksSession = TurbolinksSession.getDefault(this);
         turbolinksSession.addJavascriptInterface(this, "scoutBridge");
@@ -49,9 +63,6 @@ public class FilterActivity extends ScoutActivity {
                 .adapter(this)
                 .view(turbolinksView)
                 .visit(location);
-
-
-
 
     }
 
@@ -112,13 +123,24 @@ public class FilterActivity extends ScoutActivity {
      * Retrieve the filter URL from the app and then 
      */
     private void submitForm(){
-
+        Log.d(LOG_TAG, "FilterType: " + filterType);
+        switch (filterType){
+            case 1:
+                userPreferences.saveFoodFilter(queryParams);
+                Log.d(LOG_TAG, "Saving: " + queryParams);
+                break;
+            case 2:
+                userPreferences.saveStudyFilter(queryParams);
+                break;
+            case 3:
+                userPreferences.saveTechFilter(queryParams);
+                break;
+        }
     }
 
     @JavascriptInterface
     public void showToast(String params){
         this.queryParams = params;
-        Log.d(LOG_TAG, params);
     }
 
 }

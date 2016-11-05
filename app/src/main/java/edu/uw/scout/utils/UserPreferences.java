@@ -71,9 +71,27 @@ public class UserPreferences {
      */
     public String getTabURL(int tab){
         String[] tabs = applicationContext.getResources().getStringArray(R.array.scout_tab_urls);
-        return getCampusURL() + tabs[tab];
+
+        String url = getCampusURL() + tabs[tab];
+        String params = getFilterParams(tab);
+
+        if(!params.equals(""))
+            url += "?" + params;
+
+        return url;
     }
 
+    private String getFilterParams(int tab){
+        switch (tab){
+            case 1:
+                return getFoodFilter();
+            case 2:
+                return getStudyFilter();
+            case 3:
+                return getTechFilter();
+        }
+        return "";
+    }
     /**
      * Return whether the user has opened the app before. Use this for onboarding checks.
      * @return userHasOpenedApp
@@ -89,7 +107,7 @@ public class UserPreferences {
      * @return foodFilter
      */
     public String getFoodFilter(){
-        return getFilter(PrefUtils.PREF_TECH_FILTER, PrefUtils.PREF_TECH_FILTER_TIME);
+        return getFilter(PrefUtils.PREF_FOOD_FILTER, PrefUtils.PREF_FOOD_FILTER_TIME);
     }
 
     /**
@@ -97,7 +115,7 @@ public class UserPreferences {
      * @return foodFilter
      */
     public String getStudyFilter(){
-        return getFilter(PrefUtils.PREF_TECH_FILTER, PrefUtils.PREF_TECH_FILTER_TIME);
+        return getFilter(PrefUtils.PREF_STUDY_FILTER, PrefUtils.PREF_STUDY_FILTER_TIME);
     }
 
     /**
@@ -138,6 +156,7 @@ public class UserPreferences {
         // if the filter was saved more than 15 minutes ago then return empty
         if(time - System.currentTimeMillis() < -1 * (15 * 60 * 1000)){
             PrefUtils.saveToPrefs(applicationContext, filterKey, "");
+            Log.d(LOG_TAG, "Too old!");
             return "";
         }
         return PrefUtils.getFromPrefs(applicationContext, filterKey, "");

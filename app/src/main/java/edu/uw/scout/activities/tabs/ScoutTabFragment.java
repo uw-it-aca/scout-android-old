@@ -54,6 +54,8 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
 
         String tabURL = getTabURL();
 
+        Log.d(LOG_TAG, tabURL);
+
         if(url != null && url.equals(tabURL))
             return;
 
