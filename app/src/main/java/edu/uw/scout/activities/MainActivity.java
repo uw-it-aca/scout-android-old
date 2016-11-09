@@ -1,9 +1,12 @@
 package edu.uw.scout.activities;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,6 +18,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import butterknife.BindArray;
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import edu.uw.scout.R;
@@ -32,6 +36,8 @@ public class MainActivity extends ScoutActivity {
     @BindView(R.id.viewPager) ViewPager viewPager;
     @BindView(R.id.tabLayout) TabLayout tabLayout;
     @BindArray(R.array.scout_tabs) String[] scoutTabs;
+    @BindString(R.string.help_email) String helpEmail;
+    @BindString(R.string.help_subject) String helpSubject;
 
     private int campusIndex = -1;
     private int tabPosition = -1;
@@ -64,6 +70,7 @@ public class MainActivity extends ScoutActivity {
         scoutTabAdapter = new ScoutTabFragmentAdapter(getSupportFragmentManager(), scoutTabs);
         viewPager.setAdapter(scoutTabAdapter);
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.addOnTabSelectedListener(onTabSelectedListener);
 
         // Set the tab icons
         try {
@@ -74,6 +81,8 @@ public class MainActivity extends ScoutActivity {
         } catch (NullPointerException e){
             Log.d(LOG_TAG , "Tab missing!");
         }
+
+        switchTabs(0);
 
 
         tabLayout.addOnTabSelectedListener(tabChangedListener);
@@ -101,6 +110,49 @@ public class MainActivity extends ScoutActivity {
             }
         }
     };
+
+
+    /**
+     * This onTabSelectedListener changes the icon colors on tab movement
+     */
+    TabLayout.OnTabSelectedListener onTabSelectedListener = new TabLayout.OnTabSelectedListener() {
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+            switchTabs(tab.getPosition());
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+
+        }
+    };
+
+    /**
+     * Switches the colors of the tabs to reflect which is selected
+     * @param tabSelected
+     */
+    private void switchTabs(int tabSelected){
+        try {
+
+            int tabIconColor = ContextCompat.getColor(this, R.color.unselectedIcon);
+            int white = ContextCompat.getColor(this, R.color.white);
+            for(int i = 0; i < tabLayout.getTabCount(); i++){
+                if(i == tabSelected){
+                    tabLayout.getTabAt(i).getIcon().setColorFilter(white, PorterDuff.Mode.SRC_IN);
+                } else {
+                    tabLayout.getTabAt(i).getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
+                }
+            }
+        } catch (NullPointerException e){
+            e.printStackTrace();
+            Log.d(LOG_TAG, "Null Pointer Exception thrown when altering tab icons!");
+        }
+    }
 
     private void setFilterIconVisible(boolean isVisible){
         if(menu != null && menu.getItem(0) != null)
@@ -167,6 +219,10 @@ public class MainActivity extends ScoutActivity {
             filterIntent.putExtra(CONSTANTS.INTENT_URL_KEY, getFilterURL());
             filterIntent.putExtra(CONSTANTS.FILTER_TYPE_KEY, tabLayout.getSelectedTabPosition());
             startActivity(filterIntent);
+        } else if(id == R.id.action_help){
+            String mailto= "mailto:" + helpEmail + "?subject=" + helpSubject;
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mailto));
+            startActivity(browserIntent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -174,9 +230,15 @@ public class MainActivity extends ScoutActivity {
 
     @Override
     public void visitProposedToLocationWithAction(String location, String action) {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(CONSTANTS.INTENT_URL_KEY, location);
-        this.startActivity(intent);
+        if(location.contains("?")){
+            Intent intent = new Intent(this, DiscoverCardActivity.class);
+            intent.putExtra(CONSTANTS.INTENT_URL_KEY, location);
+            this.startActivity(intent);
+        } else {
+            Intent intent = new Intent(this, DetailActivity.class);
+            intent.putExtra(CONSTANTS.INTENT_URL_KEY, location);
+            this.startActivity(intent);
+        }
     }
 
     /**

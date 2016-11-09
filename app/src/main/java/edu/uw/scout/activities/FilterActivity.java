@@ -26,7 +26,7 @@ public class FilterActivity extends ScoutActivity {
     @BindView(R.id.turbolinks_view)
     TurbolinksView turbolinksView;
     TurbolinksSession turbolinksSession;
-    private String queryParams;
+    private String queryParams = "";
     @BindView(R.id.filter_submit)
     FloatingActionButton fab;
     private int filterType;
@@ -37,7 +37,7 @@ public class FilterActivity extends ScoutActivity {
         setContentView(R.layout.activity_filter);
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar) ;
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -123,11 +123,9 @@ public class FilterActivity extends ScoutActivity {
      * Retrieve the filter URL from the app and then 
      */
     private void submitForm(){
-        Log.d(LOG_TAG, "FilterType: " + filterType);
         switch (filterType){
             case 1:
                 userPreferences.saveFoodFilter(queryParams);
-                Log.d(LOG_TAG, "Saving: " + queryParams);
                 break;
             case 2:
                 userPreferences.saveStudyFilter(queryParams);
@@ -139,7 +137,7 @@ public class FilterActivity extends ScoutActivity {
     }
 
     @JavascriptInterface
-    public void showToast(String params){
+    public void setParams(String params){
         this.queryParams = params;
     }
 

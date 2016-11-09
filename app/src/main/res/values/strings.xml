@@ -46,6 +46,8 @@
     <string name="campus_chooser_negative_text">Cancel</string>
     <string name="campus_chooser_positive_text">Choose</string>
     <string name="action_clear">Clear</string>
+    <string name="title_activity_dicover">Discover</string>
+    <string name="action_help_and_feedback"><![CDATA[Help & Feedback]]></string>
 
     <array name="pref_campus_list_titles">
         <item>Seattle</item>
@@ -59,5 +61,8 @@
         <item>tacoma</item>
     </array>
 
+
+    <string name="help_email">help@uw.edu</string>
+    <string name="help_subject">Scout Android: Help Needed</string>
 
 </resources>

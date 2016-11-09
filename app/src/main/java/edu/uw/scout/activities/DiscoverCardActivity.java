@@ -63,7 +63,8 @@ public class DiscoverCardActivity extends ScoutActivity {
      */
     @Override
     public void visitProposedToLocationWithAction(String location, String action) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(location));
-        startActivity(browserIntent);
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra(CONSTANTS.INTENT_URL_KEY, location);
+        this.startActivity(intent);
     }
 }
