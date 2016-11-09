@@ -13,8 +13,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
-
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import butterknife.BindArray;
@@ -24,7 +22,6 @@ import butterknife.ButterKnife;
 import edu.uw.scout.R;
 import edu.uw.scout.activities.tabs.ScoutTabFragment;
 import edu.uw.scout.activities.tabs.ScoutTabFragmentAdapter;
-import edu.uw.scout.utils.UserPreferences;
 
 public class MainActivity extends ScoutActivity {
 
@@ -84,11 +81,7 @@ public class MainActivity extends ScoutActivity {
 
         switchTabs(0);
 
-
         tabLayout.addOnTabSelectedListener(tabChangedListener);
-
-        // If we are on discover, hide the filter button
-        Log.d(LOG_TAG , "onCreate Called");
 
         // If the user has not opened the app, show the campus chooser.
         if(!userPreferences.hasUserOpenedApp()) {
@@ -97,6 +90,7 @@ public class MainActivity extends ScoutActivity {
             campusIndex = userPreferences.getCampusSelectedIndex();
         }
 
+        // If we are on discover, hide the filter button
         handler.postDelayed(hideFilterIcon, 50);
     }
 
@@ -164,13 +158,11 @@ public class MainActivity extends ScoutActivity {
 
         outState.putInt(CAMPUS_INDEX, userPreferences.getCampusSelectedIndex());
         outState.putInt(TAB_POSITION, viewPager.getCurrentItem());
-        Log.d(LOG_TAG, "Saving instance state!");
     }
 
     @Override
     protected void onPause(){
         super.onPause();
-        Log.d(LOG_TAG, "Pausing view!");
         campusIndex = userPreferences.getCampusSelectedIndex();
         tabPosition = viewPager.getCurrentItem();
     }
@@ -178,7 +170,6 @@ public class MainActivity extends ScoutActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(LOG_TAG, "Resuming! " + campusIndex + " ,  " + tabPosition);
 
         if(campusIndex != -1) {
             if(campusIndex != userPreferences.getCampusSelectedIndex()) {
@@ -273,13 +264,11 @@ public class MainActivity extends ScoutActivity {
     @Override
     protected void onStop(){
         super.onStop();
-        Log.d(LOG_TAG , "Stopping!");
     }
 
     @Override
     protected void onRestart(){
         super.onRestart();
-        Log.d(LOG_TAG , "onRestart");
     }
     @Override
     protected void onDestroy(){
@@ -287,7 +276,6 @@ public class MainActivity extends ScoutActivity {
 
         if(isFinishing())
             userPreferences.deleteFilters();
-        Log.d(LOG_TAG , "destroyed");
     }
 
 
