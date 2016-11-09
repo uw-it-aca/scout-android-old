@@ -13,17 +13,12 @@ import edu.uw.scout.utils.UserPreferences;
  */
 public class ScoutActivity extends AppCompatActivity implements TurbolinksAdapter{
 
-    /**
-     * The key used for retrieval and storing of turbolinks URLs in Intents
-     */
-    public static final String INTENT_URL_KEY = "__intent_url_key__";
-
     protected UserPreferences userPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        userPreferences = UserPreferences.getInstance();
+        userPreferences = new UserPreferences(this);
     }
 
     @Override

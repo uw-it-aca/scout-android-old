@@ -12,16 +12,10 @@ import edu.uw.scout.R;
 public class UserPreferences {
 
     private static final String LOG_TAG = UserPreferences.class.getSimpleName();
-    private static UserPreferences instance;
-
-    public static UserPreferences getInstance(){
-        return instance;
-    }
 
     private Context applicationContext;
 
     public UserPreferences(Context context){
-        instance = this;
         applicationContext = context;
     }
 
@@ -70,14 +64,110 @@ public class UserPreferences {
         return -1;
     }
 
+    /**
+     * Retreives the URL for a given tab index on the MainActivity
+     * @param tab
+     * @return
+     */
     public String getTabURL(int tab){
         String[] tabs = applicationContext.getResources().getStringArray(R.array.scout_tab_urls);
-        return getCampusURL() + tabs[tab];
+
+        String url = getCampusURL() + tabs[tab];
+        String params = getFilterParams(tab);
+
+        if(!params.equals(""))
+            url += "?" + params;
+
+        return url;
     }
 
+    private String getFilterParams(int tab){
+        switch (tab){
+            case 1:
+                return getFoodFilter();
+            case 2:
+                return getStudyFilter();
+            case 3:
+                return getTechFilter();
+        }
+        return "";
+    }
+    /**
+     * Return whether the user has opened the app before. Use this for onboarding checks.
+     * @return userHasOpenedApp
+     */
     public boolean hasUserOpenedApp(){
         boolean hasOpened =PrefUtils.getFromPrefs(applicationContext, PrefUtils.PREF_HAS_OPENED_APP_KEY, false);
         PrefUtils.saveToPrefs(applicationContext, PrefUtils.PREF_HAS_OPENED_APP_KEY, true);
         return hasOpened;
+    }
+
+    /**
+     * Returns the food filter saved in the SharedPreferences, returns an empty string otherwise
+     * @return foodFilter
+     */
+    public String getFoodFilter(){
+        return getFilter(PrefUtils.PREF_FOOD_FILTER, PrefUtils.PREF_FOOD_FILTER_TIME);
+    }
+
+    /**
+     * Returns the food filter saved in the SharedPreferences, returns an empty string otherwise
+     * @return foodFilter
+     */
+    public String getStudyFilter(){
+        return getFilter(PrefUtils.PREF_STUDY_FILTER, PrefUtils.PREF_STUDY_FILTER_TIME);
+    }
+
+    /**
+     * Returns the food filter saved in the SharedPreferences, returns an empty string otherwise
+     * @return foodFilter
+     */
+    public String getTechFilter(){
+        return getFilter(PrefUtils.PREF_TECH_FILTER, PrefUtils.PREF_TECH_FILTER_TIME);
+    }
+
+    public void saveStudyFilter(String filters){
+        if(filters == null)
+            throw new IllegalArgumentException("Filters cannot be null! Pass an empty string instead");
+
+        PrefUtils.saveToPrefs(applicationContext, PrefUtils.PREF_STUDY_FILTER, filters);
+        PrefUtils.saveToPrefs(applicationContext, PrefUtils.PREF_STUDY_FILTER_TIME, System.currentTimeMillis());
+    }
+
+    public void saveFoodFilter(String filters){
+        if(filters == null)
+            throw new IllegalArgumentException("Filters cannot be null! Pass an empty string instead");
+
+        PrefUtils.saveToPrefs(applicationContext, PrefUtils.PREF_FOOD_FILTER, filters);
+        PrefUtils.saveToPrefs(applicationContext, PrefUtils.PREF_FOOD_FILTER_TIME, System.currentTimeMillis());
+    }
+
+    public void saveTechFilter(String filters){
+        if(filters == null)
+            throw new IllegalArgumentException("Filters cannot be null! Pass an empty string instead");
+
+        PrefUtils.saveToPrefs(applicationContext, PrefUtils.PREF_TECH_FILTER, filters);
+        PrefUtils.saveToPrefs(applicationContext, PrefUtils.PREF_TECH_FILTER_TIME, System.currentTimeMillis());
+    }
+
+    private String getFilter(String filterKey, String filterTimeKey){
+        long time = PrefUtils.getFromPrefs(applicationContext, filterTimeKey, System.currentTimeMillis() - 20 * 60 * 1000);
+
+        // if the filter was saved more than 15 minutes ago then return empty
+        if(time - System.currentTimeMillis() < -1 * (15 * 60 * 1000)){
+            PrefUtils.saveToPrefs(applicationContext, filterKey, "");
+            Log.d(LOG_TAG, "Too old!");
+            return "";
+        }
+        return PrefUtils.getFromPrefs(applicationContext, filterKey, "");
+    }
+
+    public void deleteFilters() {
+        PrefUtils.deleteFromPrefs(applicationContext, PrefUtils.PREF_TECH_FILTER);
+        PrefUtils.deleteFromPrefs(applicationContext, PrefUtils.PREF_STUDY_FILTER);
+        PrefUtils.deleteFromPrefs(applicationContext, PrefUtils.PREF_FOOD_FILTER);
+        PrefUtils.deleteFromPrefs(applicationContext, PrefUtils.PREF_TECH_FILTER_TIME);
+        PrefUtils.deleteFromPrefs(applicationContext, PrefUtils.PREF_STUDY_FILTER_TIME);
+        PrefUtils.deleteFromPrefs(applicationContext, PrefUtils.PREF_FOOD_FILTER_TIME);
     }
 }
