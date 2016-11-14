@@ -13,6 +13,13 @@
         <item>T</item>
     </array>
 
+    <array name="scout_tab_titles">
+        <item>Discover</item>
+        <item>Food</item>
+        <item>Study</item>
+        <item>Tech</item>
+    </array>
+
     <string name="base_url">http://curry.aca.uw.edu:8001/h/</string>
 
     <array name="campus">

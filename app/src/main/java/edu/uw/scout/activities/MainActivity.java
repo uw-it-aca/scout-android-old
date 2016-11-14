@@ -35,6 +35,7 @@ public class MainActivity extends ScoutActivity {
     @BindArray(R.array.scout_tabs) String[] scoutTabs;
     @BindString(R.string.help_email) String helpEmail;
     @BindString(R.string.help_subject) String helpSubject;
+    @BindArray(R.array.scout_tab_titles) String[] scoutTabTitles;
 
     private int campusIndex = -1;
     private int tabPosition = -1;
@@ -80,6 +81,7 @@ public class MainActivity extends ScoutActivity {
         }
 
         switchTabs(0);
+        changeTitle(0);
 
         tabLayout.addOnTabSelectedListener(tabChangedListener);
 
@@ -113,6 +115,7 @@ public class MainActivity extends ScoutActivity {
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
             switchTabs(tab.getPosition());
+            changeTitle(tab.getPosition());
         }
 
         @Override
@@ -125,6 +128,18 @@ public class MainActivity extends ScoutActivity {
 
         }
     };
+
+    /**
+     * Change the ActionBar title depending upon which tab we have selected
+     * @param position the index of the tab selected
+     */
+    private void changeTitle(int position) {
+        if(position < 0 || position >= scoutTabTitles.length)
+            throw new IllegalArgumentException("Tab index is outside of the scout tab titles array!");
+
+        String title = scoutTabTitles[position];
+        getSupportActionBar().setTitle(title);
+    }
 
     /**
      * Switches the colors of the tabs to reflect which is selected

@@ -14,6 +14,7 @@ import com.basecamp.turbolinks.TurbolinksSession;
 import com.basecamp.turbolinks.TurbolinksView;
 
 import edu.uw.scout.R;
+import edu.uw.scout.Scout;
 import edu.uw.scout.activities.CONSTANTS;
 import edu.uw.scout.activities.DetailActivity;
 import edu.uw.scout.activities.DiscoverCardActivity;
@@ -39,7 +40,12 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
         View rootView = inflater.inflate(
                 R.layout.fragment_collection_object, container, false);
         turbolinksView = (TurbolinksView) rootView.findViewById(R.id.turbolinks_view);
-        turbolinksSession = TurbolinksSession.getNew(getContext());
+        Scout scout = Scout.getInstance();
+        if(scout == null) {
+            turbolinksSession = TurbolinksSession.getDefault(getContext());
+        } else {
+            turbolinksSession = scout.getTurbolinksManager().getSession(getTabURL(), getContext());
+        }
 
         return rootView;
     }

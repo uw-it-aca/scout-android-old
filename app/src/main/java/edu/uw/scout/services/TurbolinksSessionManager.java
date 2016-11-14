@@ -1,9 +1,8 @@
-package edu.uw.scout;
+package edu.uw.scout.services;
 
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
@@ -23,25 +22,16 @@ import java.util.Queue;
  * Created by ezturner on 11/9/16.
  */
 
-public class TurbolinksSessionManagerService extends Service {
-
-    private static TurbolinksSessionManagerService instance;
-
+public class TurbolinksSessionManager {
     // The map where URLs are mapped to TurbolinksSessions
     private Map<String, TurbolinksSession> sessionMap;
 
     // the session queue we use to avoid using too much memory
     private Queue<TurbolinksSession> sessionQueue;
 
-    public TurbolinksSessionManagerService(){
+    public TurbolinksSessionManager(){
         sessionMap = new HashMap<>();
         sessionQueue = new LinkedList<>();
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
     }
 
     public TurbolinksSession getSession(String url, Context context) {

@@ -56,7 +56,6 @@ public class FilterActivity extends ScoutActivity {
             }
         });
 
-        turbolinksSession = TurbolinksSession.getDefault(this);
         turbolinksSession.addJavascriptInterface(this, "scoutBridge");
         turbolinksSession.progressView(LayoutInflater.from(this).inflate(com.basecamp.turbolinks.R.layout.turbolinks_progress, turbolinksView, false), com.basecamp.turbolinks.R.id.turbolinks_default_progress_indicator, Integer.MAX_VALUE)
                 .activity(this)
