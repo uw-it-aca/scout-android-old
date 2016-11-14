@@ -28,6 +28,7 @@ tools:context=".activities.DetailActivity">
         android:layout_height="wrap_content"
         android:id="@+id/filter_submit"
         android:layout_gravity="bottom|end"
+        android:background="@color/colorAccent"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_check_white_24dp"/>
 
