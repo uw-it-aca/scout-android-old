@@ -25,7 +25,6 @@ public class FilterActivity extends ScoutActivity {
     private String location;
     @BindView(R.id.turbolinks_view)
     TurbolinksView turbolinksView;
-    TurbolinksSession turbolinksSession;
     private String queryParams = "";
     @BindView(R.id.filter_submit)
     FloatingActionButton fab;
