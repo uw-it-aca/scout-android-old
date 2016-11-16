@@ -7,4 +7,5 @@
     <color name="negativeRed">#B71C1C</color>
     <color name="unselectedIcon">#F2251642</color>
     <color name="white">#FFF</color>
+    <color name="loaderGrey">#ddd</color>
 </resources>

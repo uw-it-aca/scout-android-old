@@ -117,4 +117,8 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
         int tabIndex = getArguments().getInt(TAB_ID);
         return new UserPreferences(getActivity()).getTabURL(tabIndex);
     }
+
+    public TurbolinksSession getTurbolinksSession(){
+        return turbolinksSession;
+    }
 }

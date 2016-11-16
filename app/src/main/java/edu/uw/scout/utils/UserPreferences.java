@@ -41,7 +41,7 @@ public class UserPreferences {
      * Sets the campus by the index of the String array campus
      */
     public void setCampusByIndex(int index){
-        String[] campuses = applicationContext.getResources().getStringArray(R.array.campus);
+        String[] campuses = applicationContext.getResources().getStringArray(R.array.pref_campus_list_values);
         PrefUtils.saveToPrefs(applicationContext, PrefUtils.PREF_CAMPUS, campuses[index]);
     }
 
@@ -51,7 +51,7 @@ public class UserPreferences {
     public int getCampusSelectedIndex(){
         String campus = PrefUtils.getFromPrefs(applicationContext, PrefUtils.PREF_CAMPUS, "seattle");
 
-        String[] campuses = applicationContext.getResources().getStringArray(R.array.campus);
+        String[] campuses = applicationContext.getResources().getStringArray(R.array.pref_campus_list_values);
 
         int index = 0;
 
