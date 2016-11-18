@@ -96,7 +96,7 @@ public class FilterActivity extends ScoutActivity {
      */
     @Override
     public void visitCompleted() {
-        String pageTitle = TurbolinksSession.getDefault(this).getWebView().getTitle();
+        String pageTitle = turbolinksSession.getWebView().getTitle();
         ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null)

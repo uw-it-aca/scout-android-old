@@ -135,7 +135,7 @@ class PrefUtils {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         try {
-            sharedPrefs.edit().remove(key).commit();
+            sharedPrefs.edit().remove(key).apply();
         } catch (Exception e) {
             e.printStackTrace();
         }

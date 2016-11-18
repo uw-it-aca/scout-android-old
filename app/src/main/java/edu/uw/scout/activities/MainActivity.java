@@ -3,14 +3,10 @@ package edu.uw.scout.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.LinearGradient;
 import android.graphics.PorterDuff;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -20,37 +16,27 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.basecamp.turbolinks.TurbolinksSession;
-import com.basecamp.turbolinks.TurbolinksView;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import butterknife.BindArray;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import edu.uw.scout.R;
+import edu.uw.scout.Scout;
 import edu.uw.scout.activities.tabs.ScoutTabFragment;
 import edu.uw.scout.activities.tabs.ScoutTabFragmentAdapter;
-
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
+import edu.uw.scout.utils.ScoutLocation;
 
 
-public class MainActivity extends ScoutActivity implements GoogleApiClient.ConnectionCallbacks
-        , GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class MainActivity extends ScoutActivity {
 
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     private static final String CAMPUS_INDEX = "campus";
     private static final String TAB_POSITION = "tabPos";
-    private static final int LOCATION_REQ_CODE = 1592;
 
     @BindView(R.id.viewPager) ViewPager viewPager;
     @BindView(R.id.tabLayout) TabLayout tabLayout;
@@ -58,14 +44,13 @@ public class MainActivity extends ScoutActivity implements GoogleApiClient.Conne
     @BindString(R.string.help_email) String helpEmail;
     @BindString(R.string.help_subject) String helpSubject;
     @BindArray(R.array.scout_tab_titles) String[] scoutTabTitles;
-
-    private GoogleApiClient googleApiClient;
     private int campusIndex = -1;
     private int tabPosition = -1;
     private ScoutTabFragmentAdapter scoutTabAdapter;
     private Menu menu;
     private Handler handler;
-    private Location currentLocation;
+    private ScoutLocation scoutLocation;
+    private static final int LOCATION_REQ_CODE = 1592;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,16 +87,6 @@ public class MainActivity extends ScoutActivity implements GoogleApiClient.Conne
             Log.d(LOG_TAG, "Tab missing!");
         }
 
-        // Create an instance of GoogleAPIClient.
-        if (googleApiClient == null) {
-            googleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-
-        }
-
         switchTabs(0);
         changeTitle(0);
 
@@ -124,6 +99,13 @@ public class MainActivity extends ScoutActivity implements GoogleApiClient.Conne
 
         // If we are on discover, hide the filter button
         handler.postDelayed(hideFilterIcon, 50);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Scout.getInstance().getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{"android.permission.ACCESS_FINE_LOCATION"}, LOCATION_REQ_CODE);
+        } else {
+            scoutLocation = new ScoutLocation();
+        }
+
     }
 
     private Runnable hideFilterIcon = new Runnable() {
@@ -221,7 +203,6 @@ public class MainActivity extends ScoutActivity implements GoogleApiClient.Conne
         super.onPause();
         campusIndex = userPreferences.getCampusSelectedIndex();
         tabPosition = viewPager.getCurrentItem();
-        stopLocationUpdates();
     }
 
     @Override
@@ -245,13 +226,11 @@ public class MainActivity extends ScoutActivity implements GoogleApiClient.Conne
 
     @Override
     protected void onStop() {
-        googleApiClient.disconnect();
         super.onStop();
     }
 
     @Override
     protected void onStart() {
-        googleApiClient.connect();
         super.onStart();
     }
 
@@ -360,112 +339,8 @@ public class MainActivity extends ScoutActivity implements GoogleApiClient.Conne
         return campusURL + "study/filter/";
     }
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{"android.permission.ACCESS_FINE_LOCATION"}, LOCATION_REQ_CODE);
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        } else {
-            Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                    googleApiClient);
-            if (lastLocation != null) {
-                passLocation(lastLocation);
-            } else {
-                startLocationUpdates();
-            }
-        }
 
-    }
 
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    /**
-     * Pass the lastLocation to the turbolinks view of the current tab
-     * @param location - the current location of the device
-     */
-    private void passLocation(Location location){
-        ScoutTabFragment tab = (ScoutTabFragment) scoutTabAdapter.getItem(tabLayout.getSelectedTabPosition());
-        TurbolinksSession session = tab.getTurbolinksSession();
-        currentLocation = location;
-        if(session == null){
-            handler.postDelayed(evaluateJavascript, 1500);
-        } else {
-            handler.post(evaluateJavascript);
-        }
-    }
-
-    private Runnable evaluateJavascript = new Runnable() {
-        @Override
-        public void run() {
-            ScoutTabFragment tab = (ScoutTabFragment) scoutTabAdapter.getItem(tabLayout.getSelectedTabPosition());
-            TurbolinksSession session = tab.getTurbolinksSession();
-            if(session == null){
-                handler.postDelayed(this, 50);
-                return;
-            }
-            WebView view = session.getWebView();
-            String setLocation = embedLocationInJavascript(currentLocation);
-            String locationEnabled = "Geolocation.set_is_using_location(true);";
-
-            Log.d(LOG_TAG, setLocation);
-
-            view.evaluateJavascript(locationEnabled, null);
-            view.evaluateJavascript(setLocation, null);
-        }
-    };
-
-    private String embedLocationInJavascript(Location location){
-        String js = "Geolocation.send_client_location(";
-
-        js += location.getLatitude() + "," + location.getLongitude() + ");";
-
-        return js;
-    }
-
-    private LocationRequest requestLocation() {
-        LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(5000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(locationRequest);
-        return locationRequest;
-    }
-
-    private void startLocationUpdates() {
-        try {
-            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, requestLocation(), this);
-        } catch (SecurityException e){
-            e.printStackTrace();
-            Log.d(LOG_TAG , "Requires additional permissions!");
-        }
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        passLocation(location);
-    }
-
-    private void stopLocationUpdates() {
-        if(googleApiClient != null && googleApiClient.isConnected())
-            LocationServices.FusedLocationApi.removeLocationUpdates(
-                    googleApiClient, this);
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -474,7 +349,7 @@ public class MainActivity extends ScoutActivity implements GoogleApiClient.Conne
             case LOCATION_REQ_CODE:
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startLocationUpdates();
+                    scoutLocation = new ScoutLocation();
                 }
             }
     }

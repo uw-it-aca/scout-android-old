@@ -19,6 +19,7 @@ import edu.uw.scout.activities.CONSTANTS;
 import edu.uw.scout.activities.DetailActivity;
 import edu.uw.scout.activities.DiscoverCardActivity;
 import edu.uw.scout.activities.ScoutActivity;
+import edu.uw.scout.utils.ScoutLocation;
 import edu.uw.scout.utils.UserPreferences;
 
 /**
@@ -40,9 +41,11 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
         View rootView = inflater.inflate(
                 R.layout.fragment_collection_object, container, false);
         turbolinksView = (TurbolinksView) rootView.findViewById(R.id.turbolinks_view);
+        Log.d(LOG_TAG, "Tab here.");
         Scout scout = Scout.getInstance();
         if(scout == null) {
             turbolinksSession = TurbolinksSession.getDefault(getContext());
+            Log.d(LOG_TAG, "Created session");
         } else {
             turbolinksSession = scout.getTurbolinksManager().getSession(getTabURL(), getContext());
         }
@@ -53,51 +56,46 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
     @Override
     public void onResume(){
         super.onResume();
-
         reloadTab();
     }
 
     public void reloadTab(){
-
-        String tabURL = getTabURL();
-
-        Log.d(LOG_TAG, tabURL);
-
-        if(url != null && url.equals(tabURL))
-            return;
-
-        url = tabURL;
+        url = getTabURL();
 
         turbolinksSession
                 .activity(getActivity())
                 .adapter(this)
                 .view(turbolinksView)
                 .visit(url);
+
     }
 
     @Override
     public void onPageFinished() {
 
+        Log.d(LOG_TAG , "PageFinished");
     }
 
     @Override
     public void onReceivedError(int errorCode) {
-
+        Log.d(LOG_TAG, "Error received! : " + errorCode);
     }
 
     @Override
     public void pageInvalidated() {
-
+        Log.d(LOG_TAG, "Page was invalidated!");
     }
 
     @Override
     public void requestFailedWithStatusCode(int statusCode) {
-
+        Log.d(LOG_TAG, "Request failed with status code: " + statusCode);
     }
 
     @Override
     public void visitCompleted() {
-        Log.d(LOG_TAG , turbolinksView.toString());
+        if(ScoutLocation.getInstance() != null)
+            ScoutLocation.getInstance().passLocation(turbolinksSession.getWebView());
+        Log.d(LOG_TAG , "Turbolinks visit completed!");
     }
 
     @Override
@@ -116,9 +114,5 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
     private String getTabURL(){
         int tabIndex = getArguments().getInt(TAB_ID);
         return new UserPreferences(getActivity()).getTabURL(tabIndex);
-    }
-
-    public TurbolinksSession getTurbolinksSession(){
-        return turbolinksSession;
     }
 }
