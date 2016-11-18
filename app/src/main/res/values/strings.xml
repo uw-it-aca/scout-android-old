@@ -69,5 +69,8 @@
 
     <string name="help_email">help@uw.edu</string>
     <string name="help_subject">Scout Android: Help Needed</string>
+    <string name="action_okay">OK</string>
+    <string name="temporarily_unavailable">This data is temporarily unavailable. Please try again later.</string>
+    <string name="error_requesting">Error Requesting Data</string>
 
 </resources>

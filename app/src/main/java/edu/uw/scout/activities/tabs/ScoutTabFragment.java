@@ -3,12 +3,15 @@ package edu.uw.scout.activities.tabs;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.basecamp.turbolinks.TurbolinksAdapter;
 import com.basecamp.turbolinks.TurbolinksSession;
 import com.basecamp.turbolinks.TurbolinksView;
@@ -19,6 +22,7 @@ import edu.uw.scout.activities.CONSTANTS;
 import edu.uw.scout.activities.DetailActivity;
 import edu.uw.scout.activities.DiscoverCardActivity;
 import edu.uw.scout.activities.ScoutActivity;
+import edu.uw.scout.utils.ErrorHandler;
 import edu.uw.scout.utils.ScoutLocation;
 import edu.uw.scout.utils.UserPreferences;
 
@@ -88,6 +92,20 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
 
     @Override
     public void requestFailedWithStatusCode(int statusCode) {
+        switch (statusCode){
+            case 404:
+                new MaterialDialog.Builder(getContext())
+                        .title(R.string.choose_campus)
+                        .positiveText(R.string.action_okay)
+                        .onAny(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                getActivity().onBackPressed();
+                            }
+                        })
+                        .show();
+                break;
+        }
         Log.d(LOG_TAG, "Request failed with status code: " + statusCode);
     }
 
