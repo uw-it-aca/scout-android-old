@@ -35,6 +35,7 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
     private String url;
     private TurbolinksView turbolinksView;
     private TurbolinksSession turbolinksSession;
+    private long lastVisit;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -58,9 +59,31 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        Log.d(LOG_TAG, "onStart!");
+        if(System.currentTimeMillis() - lastVisit <  15 * 1000 * 60 || (url != null && url.equals(getTabURL())))
+            return;
+
+        url = getTabURL();
+
+        turbolinksSession
+                .activity(getActivity())
+                .adapter(this)
+                .view(turbolinksView)
+                .visit(url);
+
+    }
+
+    @Override
     public void onResume(){
         super.onResume();
-        reloadTab();
+        //reloadTab();
     }
 
     public void reloadTab(){
@@ -72,6 +95,13 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
                 .view(turbolinksView)
                 .visit(url);
 
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        url = "";
+        lastVisit = System.currentTimeMillis();
     }
 
     @Override
