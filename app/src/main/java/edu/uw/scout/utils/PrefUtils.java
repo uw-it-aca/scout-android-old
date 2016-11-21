@@ -7,6 +7,11 @@ import android.preference.PreferenceManager;
 import java.util.Set;
 
 /**
+ * This class utilizes the SharedPreferences API to save user preferences.
+ * If you would like to add another preference, just add a key and use the appropriatly typed
+ * method.
+ *
+ * API reference : https://developer.android.com/reference/android/content/SharedPreferences.html
  * Created by ezturner on 8/23/16.
  */
 class PrefUtils {
@@ -14,8 +19,14 @@ class PrefUtils {
      * The portion of the URL representing a single campus.
      * Example: "seattle/"
      */
-    public final static String PREF_CAMPUS = "__pref_campus__";
-    public final static String PREF_HAS_OPENED_APP_KEY = "__OPENED__";
+    final static String PREF_CAMPUS = "__pref_campus__";
+    final static String PREF_HAS_OPENED_APP_KEY = "__OPENED__";
+    final static String PREF_STUDY_FILTER = "__study_filter__";
+    final static String PREF_STUDY_FILTER_TIME = "__study_filter_saved_at__";
+    final static String PREF_TECH_FILTER = "__tech_filter__";
+    final static String PREF_TECH_FILTER_TIME = "__tech_filter_saved_at__";
+    final static String PREF_FOOD_FILTER = "__food_filter__";
+    final static String PREF_FOOD_FILTER_TIME = "__food_filter_saved_at__";
 
     /**
      * Called to save supplied value in shared preferences against given key.
@@ -44,6 +55,21 @@ class PrefUtils {
         editor.putBoolean(key, value);
         editor.apply();
     }
+
+    /**
+     * Called to save supplied value in shared preferences against given key.
+     *
+     * @param context Context of caller activity
+     * @param key     Key of value to save against
+     * @param value   Value to save
+     */
+    public static void saveToPrefs(Context context, String key, long value) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        final SharedPreferences.Editor editor = prefs.edit();
+        editor.putLong(key, value);
+        editor.apply();
+    }
+
 
     /**
      * Called to retrieve required value from shared preferences, identified by given key.
@@ -78,6 +104,16 @@ class PrefUtils {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         try {
             return sharedPrefs.getStringSet(key, defaultValue);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return defaultValue;
+        }
+    }
+
+    public static long getFromPrefs(Context context, String key, long defaultValue){
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        try {
+            return sharedPrefs.getLong(key, defaultValue);
         } catch (Exception e) {
             e.printStackTrace();
             return defaultValue;
