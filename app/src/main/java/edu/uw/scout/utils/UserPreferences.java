@@ -41,7 +41,7 @@ public class UserPreferences {
      * Sets the campus by the index of the String array campus
      */
     public void setCampusByIndex(int index){
-        String[] campuses = applicationContext.getResources().getStringArray(R.array.campus);
+        String[] campuses = applicationContext.getResources().getStringArray(R.array.pref_campus_list_values);
         PrefUtils.saveToPrefs(applicationContext, PrefUtils.PREF_CAMPUS, campuses[index]);
     }
 
@@ -51,7 +51,7 @@ public class UserPreferences {
     public int getCampusSelectedIndex(){
         String campus = PrefUtils.getFromPrefs(applicationContext, PrefUtils.PREF_CAMPUS, "seattle");
 
-        String[] campuses = applicationContext.getResources().getStringArray(R.array.campus);
+        String[] campuses = applicationContext.getResources().getStringArray(R.array.pref_campus_list_values);
 
         int index = 0;
 
@@ -156,7 +156,8 @@ public class UserPreferences {
         // if the filter was saved more than 15 minutes ago then return empty
         if(time - System.currentTimeMillis() < -1 * (15 * 60 * 1000)){
             PrefUtils.saveToPrefs(applicationContext, filterKey, "");
-            Log.d(LOG_TAG, "Too old!");
+            Log.d(LOG_TAG, "Filters are too old! Clearing");
+            deleteFilter(filterKey, filterTimeKey);
             return "";
         }
         return PrefUtils.getFromPrefs(applicationContext, filterKey, "");
@@ -169,5 +170,10 @@ public class UserPreferences {
         PrefUtils.deleteFromPrefs(applicationContext, PrefUtils.PREF_TECH_FILTER_TIME);
         PrefUtils.deleteFromPrefs(applicationContext, PrefUtils.PREF_STUDY_FILTER_TIME);
         PrefUtils.deleteFromPrefs(applicationContext, PrefUtils.PREF_FOOD_FILTER_TIME);
+    }
+
+    private void deleteFilter(String filterKey, String filterTimeKey){
+        PrefUtils.deleteFromPrefs(applicationContext, filterKey);
+        PrefUtils.deleteFromPrefs(applicationContext, filterTimeKey);
     }
 }

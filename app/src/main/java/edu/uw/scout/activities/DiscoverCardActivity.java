@@ -38,7 +38,7 @@ public class DiscoverCardActivity extends ScoutActivity {
 
         location = getIntent().getStringExtra(CONSTANTS.INTENT_URL_KEY);
 
-        TurbolinksSession.getDefault(this).progressView(LayoutInflater.from(this).inflate(com.basecamp.turbolinks.R.layout.turbolinks_progress, turbolinksView, false), com.basecamp.turbolinks.R.id.turbolinks_default_progress_indicator, Integer.MAX_VALUE)
+        turbolinksSession.progressView(LayoutInflater.from(this).inflate(com.basecamp.turbolinks.R.layout.turbolinks_progress, turbolinksView, false), com.basecamp.turbolinks.R.id.turbolinks_default_progress_indicator, Integer.MAX_VALUE)
                 .activity(this)
                 .adapter(this)
                 .view(turbolinksView)
@@ -63,7 +63,8 @@ public class DiscoverCardActivity extends ScoutActivity {
      */
     @Override
     public void visitProposedToLocationWithAction(String location, String action) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(location));
-        startActivity(browserIntent);
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra(CONSTANTS.INTENT_URL_KEY, location);
+        this.startActivity(intent);
     }
 }

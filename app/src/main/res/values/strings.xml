@@ -13,7 +13,12 @@
         <item>T</item>
     </array>
 
-    <string name="base_url">http://curry.aca.uw.edu:8001/h/</string>
+    <array name="scout_tab_titles">
+        <item>Discover</item>
+        <item>Food</item>
+        <item>Study</item>
+        <item>Tech</item>
+    </array>
 
     <array name="campus">
         <item>Seattle</item>
@@ -46,6 +51,8 @@
     <string name="campus_chooser_negative_text">Cancel</string>
     <string name="campus_chooser_positive_text">Choose</string>
     <string name="action_clear">Clear</string>
+    <string name="title_activity_dicover">Discover</string>
+    <string name="action_help_and_feedback"><![CDATA[Help & Feedback]]></string>
 
     <array name="pref_campus_list_titles">
         <item>Seattle</item>
@@ -59,5 +66,11 @@
         <item>tacoma</item>
     </array>
 
+
+    <string name="help_email">help@uw.edu</string>
+    <string name="help_subject">Scout Android: Help Needed</string>
+    <string name="action_okay">OK</string>
+    <string name="temporarily_unavailable">This data is temporarily unavailable. Please try again later.</string>
+    <string name="error_requesting">Error Requesting Data</string>
 
 </resources>

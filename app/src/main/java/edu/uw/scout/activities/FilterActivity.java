@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebView;
 
 import com.basecamp.turbolinks.TurbolinksSession;
 import com.basecamp.turbolinks.TurbolinksView;
@@ -25,8 +26,7 @@ public class FilterActivity extends ScoutActivity {
     private String location;
     @BindView(R.id.turbolinks_view)
     TurbolinksView turbolinksView;
-    TurbolinksSession turbolinksSession;
-    private String queryParams;
+    private String queryParams = "";
     @BindView(R.id.filter_submit)
     FloatingActionButton fab;
     private int filterType;
@@ -36,8 +36,7 @@ public class FilterActivity extends ScoutActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
 
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar) ;
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -56,7 +55,6 @@ public class FilterActivity extends ScoutActivity {
             }
         });
 
-        turbolinksSession = TurbolinksSession.getDefault(this);
         turbolinksSession.addJavascriptInterface(this, "scoutBridge");
         turbolinksSession.progressView(LayoutInflater.from(this).inflate(com.basecamp.turbolinks.R.layout.turbolinks_progress, turbolinksView, false), com.basecamp.turbolinks.R.id.turbolinks_default_progress_indicator, Integer.MAX_VALUE)
                 .activity(this)
@@ -98,7 +96,7 @@ public class FilterActivity extends ScoutActivity {
      */
     @Override
     public void visitCompleted() {
-        String pageTitle = TurbolinksSession.getDefault(this).getWebView().getTitle();
+        String pageTitle = turbolinksSession.getWebView().getTitle();
         ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null)
@@ -123,11 +121,9 @@ public class FilterActivity extends ScoutActivity {
      * Retrieve the filter URL from the app and then 
      */
     private void submitForm(){
-        Log.d(LOG_TAG, "FilterType: " + filterType);
         switch (filterType){
             case 1:
                 userPreferences.saveFoodFilter(queryParams);
-                Log.d(LOG_TAG, "Saving: " + queryParams);
                 break;
             case 2:
                 userPreferences.saveStudyFilter(queryParams);
@@ -139,7 +135,7 @@ public class FilterActivity extends ScoutActivity {
     }
 
     @JavascriptInterface
-    public void showToast(String params){
+    public void setParams(String params){
         this.queryParams = params;
     }
 
