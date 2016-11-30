@@ -52,17 +52,6 @@ public class DetailActivity extends ScoutActivity{
                 .visit(location);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                super.onBackPressed();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     /**
      * Upon page load, set the ActionBar title to the page title
      */

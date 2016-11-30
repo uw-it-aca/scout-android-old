@@ -83,10 +83,13 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
     @Override
     public void onResume(){
         super.onResume();
-        //reloadTab();
+        reloadTab();
     }
 
     public void reloadTab(){
+        if(System.currentTimeMillis() - lastVisit <  150)
+            return;
+
         url = getTabURL();
 
         turbolinksSession
