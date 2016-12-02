@@ -87,7 +87,7 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
     }
 
     public void reloadTab(){
-        if(System.currentTimeMillis() - lastVisit <  150)
+        if(System.currentTimeMillis() - lastVisit <  150|| (url != null && url.equals(getTabURL())))
             return;
 
         url = getTabURL();
