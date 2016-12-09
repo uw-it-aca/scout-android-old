@@ -46,11 +46,9 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
         View rootView = inflater.inflate(
                 R.layout.fragment_collection_object, container, false);
         turbolinksView = (TurbolinksView) rootView.findViewById(R.id.turbolinks_view);
-        Log.d(LOG_TAG, "Tab here.");
         Scout scout = Scout.getInstance();
         if(scout == null) {
             turbolinksSession = TurbolinksSession.getDefault(getContext());
-            Log.d(LOG_TAG, "Created session");
         } else {
             turbolinksSession = scout.getTurbolinksManager().getSession(getTabURL(), getContext());
         }
@@ -66,7 +64,6 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
     @Override
     public void onStart(){
         super.onStart();
-        Log.d(LOG_TAG, "onStart!");
         if(System.currentTimeMillis() - lastVisit <  15 * 1000 * 60 || (url != null && url.equals(getTabURL())))
             return;
 
@@ -109,18 +106,16 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
 
     @Override
     public void onPageFinished() {
-
-        Log.d(LOG_TAG , "PageFinished");
     }
 
     @Override
     public void onReceivedError(int errorCode) {
-        Log.d(LOG_TAG, "Error received! : " + errorCode);
+
     }
 
     @Override
     public void pageInvalidated() {
-        Log.d(LOG_TAG, "Page was invalidated!");
+
     }
 
     @Override
@@ -146,7 +141,7 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
     public void visitCompleted() {
         if(ScoutLocation.getInstance() != null)
             ScoutLocation.getInstance().passLocation(turbolinksSession.getWebView());
-        Log.d(LOG_TAG , "Turbolinks visit completed!");
+
     }
 
     @Override
