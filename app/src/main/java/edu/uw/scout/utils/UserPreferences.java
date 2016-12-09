@@ -150,6 +150,14 @@ public class UserPreferences {
         PrefUtils.saveToPrefs(applicationContext, PrefUtils.PREF_TECH_FILTER_TIME, System.currentTimeMillis());
     }
 
+    /**
+     * Returns a boolean indicating whether this user has opted out of firebase analytics
+     * @return
+     */
+    public boolean isOptedOut(){
+        return PrefUtils.getFromPrefs(applicationContext, "analytics_pref_key", false);
+    }
+
     private String getFilter(String filterKey, String filterTimeKey){
         long time = PrefUtils.getFromPrefs(applicationContext, filterTimeKey, System.currentTimeMillis() - 20 * 60 * 1000);
 

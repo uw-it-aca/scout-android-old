@@ -21,7 +21,7 @@ public class Scout extends Application {
 
     private UserPreferences userPreferences;
     private TurbolinksSessionManager sessionManager;
-    private FirebaseAnalytics firebaseAnalytics;
+    private ScoutAnalytics scoutAnalytics;
 
     @Override
     public void onCreate(){
@@ -29,6 +29,12 @@ public class Scout extends Application {
         new UserPreferences(getApplicationContext());
         instance = this;
         sessionManager = new TurbolinksSessionManager();
+        userPreferences = new UserPreferences(this);
+
+        scoutAnalytics = ScoutAnalytics.getInstance();
+        if(scoutAnalytics == null)
+            scoutAnalytics = new ScoutAnalytics(this);
+
     }
 
     public UserPreferences getPreferences(){
