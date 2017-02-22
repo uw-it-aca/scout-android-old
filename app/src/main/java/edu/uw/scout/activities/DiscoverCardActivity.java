@@ -45,7 +45,6 @@ public class DiscoverCardActivity extends ScoutActivity {
                 .visit(location);
     }
 
-
     /**
      * Upon page load, set the ActionBar title to the page title
      */

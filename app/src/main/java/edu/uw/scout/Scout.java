@@ -3,6 +3,7 @@ package edu.uw.scout;
 import android.app.Application;
 
 import com.basecamp.turbolinks.TurbolinksSession;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import edu.uw.scout.services.TurbolinksSessionManager;
 import edu.uw.scout.utils.UserPreferences;
@@ -20,6 +21,7 @@ public class Scout extends Application {
 
     private UserPreferences userPreferences;
     private TurbolinksSessionManager sessionManager;
+    private ScoutAnalytics scoutAnalytics;
 
     @Override
     public void onCreate(){
@@ -27,6 +29,12 @@ public class Scout extends Application {
         new UserPreferences(getApplicationContext());
         instance = this;
         sessionManager = new TurbolinksSessionManager();
+        userPreferences = new UserPreferences(this);
+
+        scoutAnalytics = ScoutAnalytics.getInstance();
+        if(scoutAnalytics == null)
+            scoutAnalytics = new ScoutAnalytics(this);
+
     }
 
     public UserPreferences getPreferences(){
@@ -36,4 +44,5 @@ public class Scout extends Application {
     public TurbolinksSessionManager getTurbolinksManager(){
         return sessionManager;
     }
+
 }
