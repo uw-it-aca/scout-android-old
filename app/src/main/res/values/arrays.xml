@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="pref_campus_list_titles">
+        <item>Seattle</item>
+        <item>Bothell</item>
+        <item>Tacoma</item>
+    </array>
+
+    <array name="pref_campus_list_values">
+        <item>seattle</item>
+        <item>bothell</item>
+        <item>tacoma</item>
+    </array>
+
+    <array name="scout_tab_urls">
+        <item></item>
+        <item>food/</item>
+        <item>study/</item>
+        <item>tech/</item>
+    </array>
+
+    <array name="scout_tabs">
+        <item>H</item>
+        <item>F</item>
+        <item>S</item>
+        <item>T</item>
+    </array>
+
+    <array name="scout_tab_titles">
+        <item>Discover</item>
+        <item>Food</item>
+        <item>Study</item>
+        <item>Tech</item>
+    </array>
+
+    <array name="campus">
+        <item>Seattle</item>
+        <item>Bothell</item>
+        <item>Tacoma</item>
+    </array>
+
+</resources>

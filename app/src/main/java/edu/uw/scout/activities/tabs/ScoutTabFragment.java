@@ -35,6 +35,7 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
     private String url;
     private TurbolinksView turbolinksView;
     private TurbolinksSession turbolinksSession;
+    private long lastVisit;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -45,11 +46,9 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
         View rootView = inflater.inflate(
                 R.layout.fragment_collection_object, container, false);
         turbolinksView = (TurbolinksView) rootView.findViewById(R.id.turbolinks_view);
-        Log.d(LOG_TAG, "Tab here.");
         Scout scout = Scout.getInstance();
         if(scout == null) {
             turbolinksSession = TurbolinksSession.getDefault(getContext());
-            Log.d(LOG_TAG, "Created session");
         } else {
             turbolinksSession = scout.getTurbolinksManager().getSession(getTabURL(), getContext());
         }
@@ -58,12 +57,16 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
     }
 
     @Override
-    public void onResume(){
-        super.onResume();
-        reloadTab();
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
     }
 
-    public void reloadTab(){
+    @Override
+    public void onStart(){
+        super.onStart();
+        if(System.currentTimeMillis() - lastVisit <  15 * 1000 * 60 || (url != null && url.equals(getTabURL())))
+            return;
+
         url = getTabURL();
 
         turbolinksSession
@@ -75,19 +78,44 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
     }
 
     @Override
-    public void onPageFinished() {
+    public void onResume(){
+        super.onResume();
+        reloadTab();
+    }
 
-        Log.d(LOG_TAG , "PageFinished");
+    public void reloadTab(){
+        if(System.currentTimeMillis() - lastVisit <  150|| (url != null && url.equals(getTabURL())))
+            return;
+
+        url = getTabURL();
+
+        turbolinksSession
+                .activity(getActivity())
+                .adapter(this)
+                .view(turbolinksView)
+                .visit(url);
+
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        url = "";
+        lastVisit = System.currentTimeMillis();
+    }
+
+    @Override
+    public void onPageFinished() {
     }
 
     @Override
     public void onReceivedError(int errorCode) {
-        Log.d(LOG_TAG, "Error received! : " + errorCode);
+
     }
 
     @Override
     public void pageInvalidated() {
-        Log.d(LOG_TAG, "Page was invalidated!");
+
     }
 
     @Override
@@ -113,7 +141,7 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
     public void visitCompleted() {
         if(ScoutLocation.getInstance() != null)
             ScoutLocation.getInstance().passLocation(turbolinksSession.getWebView());
-        Log.d(LOG_TAG , "Turbolinks visit completed!");
+
     }
 
     @Override
