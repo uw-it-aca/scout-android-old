@@ -45,15 +45,20 @@ public class ScoutLocation implements GoogleApiClient.ConnectionCallbacks
         return instance;
     }
 
-    public ScoutLocation(){
-        // Create an instance of GoogleAPIClient.
-        googleApiClient = new GoogleApiClient.Builder(Scout.getInstance().getApplicationContext())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
+    public ScoutLocation(Context context){
 
-        googleApiClient.connect();
+        if(ScoutLocation.hasPermissions(context)) {
+            // Create an instance of GoogleAPIClient.
+            googleApiClient = new GoogleApiClient.Builder(context)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+
+            googleApiClient.connect();
+        } else {
+            Log.e(LOG_TAG, "No permissions!");
+        }
 
         handler = new Handler();
 
@@ -61,10 +66,12 @@ public class ScoutLocation implements GoogleApiClient.ConnectionCallbacks
 
         instance = this;
     }
+
     /**
      * Begin querying the user's location
      */
     private void startLocationUpdates() {
+        Log.e(LOG_TAG, "Starting location updates!");
         try {
             LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, getLocationRequest(), this);
         } catch (SecurityException e){
@@ -75,7 +82,7 @@ public class ScoutLocation implements GoogleApiClient.ConnectionCallbacks
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d(LOG_TAG, "Location: " + location);
+        Log.e(LOG_TAG, "Location: " + location);
         currentLocation = location;
         stopLocationUpdates();
     }
@@ -109,24 +116,6 @@ public class ScoutLocation implements GoogleApiClient.ConnectionCallbacks
         googleApiClient.disconnect();
     }
 
-    /**
-     * Pass the lastLocation to the turbolinks view of the current tab
-     * @param view - the WebView involved
-     */
-    public void passLocation(WebView view){
-        if(currentLocation == null) {
-            Log.d(LOG_TAG, "CurrentLocation is null!");
-            return;
-        }
-
-        String setLocation = embedLocationInJavascript(currentLocation);
-        String isUsingLocation = "Geolocation.set_is_using_location(true);";
-
-        Log.d(LOG_TAG, setLocation);
-
-        view.evaluateJavascript(isUsingLocation, null);
-        view.evaluateJavascript(setLocation, null);
-    }
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -152,26 +141,26 @@ public class ScoutLocation implements GoogleApiClient.ConnectionCallbacks
         return locationRequest;
     }
 
-    private String embedLocationInJavascript(Location location){
-        String js = "Geolocation.send_client_location(";
+    /**
+     * Returns the user's location formatted for the scout web application, with h_lat and h_lng.
+     * If we do not currently have the user's location, returns an empty string
+     * @return locationParams
+     */
+    public String getLocationParams(){
+        if(currentLocation == null) {
+            Log.e(LOG_TAG, "LocationParams error!");
+            return "";
+        }
 
-        js += location.getLatitude() + "," + location.getLongitude() + ");";
+        String locationParams = "";
+        locationParams += "?h_lat=" + currentLocation.getLatitude();
+        locationParams += "&h_lng=" + currentLocation.getLongitude();
 
-        return js;
+        return locationParams;
     }
 
-    private Runnable setLocation = new Runnable() {
-        @Override
-        public void run() {
-            if(currentLocation == null){
-                handler.postDelayed(this, 150);
-            } else {
-                for(WebView view : toUpdate){
-                    passLocation(view);
-                }
-            }
 
-        }
-    };
-
+    public static boolean hasPermissions(Context context){
+        return !(ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Scout.getInstance().getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED);
+    }
 }
