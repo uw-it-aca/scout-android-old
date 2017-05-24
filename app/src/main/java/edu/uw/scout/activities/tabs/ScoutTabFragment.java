@@ -52,7 +52,7 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
         userPreferences = new UserPreferences(getActivity().getApplicationContext());
         scoutLocation = ScoutLocation.getInstance();
 
-        if(scoutLocation == null && ScoutLocation.hasPermissions(getActivity().getApplicationContext())){
+        if(scoutLocation == null){
             scoutLocation = new ScoutLocation(getActivity().getApplicationContext());
         }
 

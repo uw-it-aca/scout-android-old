@@ -41,10 +41,7 @@ public class Scout extends Application {
         if(scoutAnalytics == null)
             scoutAnalytics = new ScoutAnalytics(this);
 
-        // If we have the proper permissions, initiate our location object
-        if (ScoutLocation.hasPermissions(getApplicationContext())) {
-            scoutLocation = new ScoutLocation(getApplicationContext());
-        }
+        scoutLocation = new ScoutLocation(getApplicationContext());
     }
 
     public UserPreferences getPreferences(){

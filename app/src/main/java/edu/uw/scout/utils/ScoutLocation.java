@@ -48,14 +48,8 @@ public class ScoutLocation implements GoogleApiClient.ConnectionCallbacks
     public ScoutLocation(Context context){
 
         if(ScoutLocation.hasPermissions(context)) {
+            createGoogleClient(context);
             // Create an instance of GoogleAPIClient.
-            googleApiClient = new GoogleApiClient.Builder(context)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-
-            googleApiClient.connect();
         } else {
             Log.e(LOG_TAG, "No permissions!");
         }
@@ -65,6 +59,24 @@ public class ScoutLocation implements GoogleApiClient.ConnectionCallbacks
         toUpdate = new ArrayList<>();
 
         instance = this;
+    }
+
+    public void permissionGranted(Context context){
+        createGoogleClient(context);
+    }
+
+    /**
+     * Creates and connects a GoogleApiClient for the purpose of querying the user location
+     * @param context an Android Context
+     */
+    private void createGoogleClient(Context context){
+        googleApiClient = new GoogleApiClient.Builder(context)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+
+        googleApiClient.connect();
     }
 
     /**
@@ -159,6 +171,9 @@ public class ScoutLocation implements GoogleApiClient.ConnectionCallbacks
         return locationParams;
     }
 
+    public boolean hasGoogleClient(){
+        return googleApiClient == null;
+    }
 
     public static boolean hasPermissions(Context context){
         return !(ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Scout.getInstance().getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED);
