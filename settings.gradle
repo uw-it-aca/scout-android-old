@@ -1,1 +1,1 @@
-include ':app', ':turbolinks'
+include ':app'

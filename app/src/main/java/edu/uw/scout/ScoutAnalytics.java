@@ -2,8 +2,6 @@ package edu.uw.scout;
 
 import android.content.Context;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
-
 import edu.uw.scout.utils.UserPreferences;
 
 /**
@@ -20,12 +18,9 @@ public class ScoutAnalytics {
         return instance;
     }
 
-    private FirebaseAnalytics firebaseAnalytics;
 
     public ScoutAnalytics(Context context){
         instance = this;
-        if(!isOptedOut())
-            firebaseAnalytics = FirebaseAnalytics.getInstance(context);
     }
 
     private boolean isOptedOut(){

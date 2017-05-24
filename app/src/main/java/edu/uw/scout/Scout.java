@@ -3,7 +3,6 @@ package edu.uw.scout;
 import android.app.Application;
 
 import com.basecamp.turbolinks.TurbolinksSession;
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import edu.uw.scout.services.TurbolinksSessionManager;
 import edu.uw.scout.utils.UserPreferences;
