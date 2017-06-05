@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.ViewTreeObserver;
 
 import com.basecamp.turbolinks.TurbolinksAdapter;
 import com.basecamp.turbolinks.TurbolinksSession;
@@ -20,7 +21,7 @@ import edu.uw.scout.utils.UserPreferences;
  * A superclass for turbolinks activities containing common variables and implementing stub
  * methods for TurbolinksAdapter.
  */
-public class ScoutActivity extends AppCompatActivity implements TurbolinksAdapter{
+public class ScoutActivity extends AppCompatActivity implements TurbolinksAdapter {
 
     private static final String LOG_TAG = ScoutActivity.class.getSimpleName();
     protected UserPreferences userPreferences;
@@ -52,6 +53,8 @@ public class ScoutActivity extends AppCompatActivity implements TurbolinksAdapte
         } else {
             turbolinksSession = scout.getTurbolinksManager().getSession(location, this);
         }
+
+        turbolinksSession.setPullToRefreshEnabled(false);
     }
 
     @Override
@@ -103,5 +106,4 @@ public class ScoutActivity extends AppCompatActivity implements TurbolinksAdapte
     public void visitProposedToLocationWithAction(String location, String action) {
 
     }
-
 }

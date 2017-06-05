@@ -179,4 +179,5 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
         return tabURL;
 
     }
+
 }

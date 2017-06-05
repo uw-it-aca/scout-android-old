@@ -5,6 +5,7 @@
     <string name="action_done">Done</string>
 
     <string name="scout_url">http://scout-test.s.uw.edu/h/</string>
+    <!-- <string name="scout_url">http://34.209.70.43:7001/h/</string> -->
 
 
     <string name="title_activity_detail">Scout</string>

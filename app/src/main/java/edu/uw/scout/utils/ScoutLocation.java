@@ -96,7 +96,7 @@ public class ScoutLocation implements GoogleApiClient.ConnectionCallbacks
     public void onLocationChanged(Location location) {
         Log.e(LOG_TAG, "Location: " + location);
         currentLocation = location;
-        stopLocationUpdates();
+
     }
 
     @Override
@@ -145,8 +145,9 @@ public class ScoutLocation implements GoogleApiClient.ConnectionCallbacks
      */
     private LocationRequest getLocationRequest() {
         LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(5000);
+        locationRequest.setInterval(45 * 1000);
+        locationRequest.setFastestInterval(30 * 1000);
+        locationRequest.setSmallestDisplacement(46);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(locationRequest);

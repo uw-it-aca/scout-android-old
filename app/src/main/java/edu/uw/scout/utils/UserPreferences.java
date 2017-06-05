@@ -184,4 +184,22 @@ public class UserPreferences {
         PrefUtils.deleteFromPrefs(applicationContext, filterKey);
         PrefUtils.deleteFromPrefs(applicationContext, filterTimeKey);
     }
+
+    /**
+     * This function is called whenever we ask the user for location permissions.
+     */
+    public void hasAskedForLocationPermission(){
+        int numTimes = PrefUtils.getFromPrefs(applicationContext, PrefUtils.PREF_NUM_TIMES_PERMISSIONS, 0);
+        PrefUtils.saveToPrefs(applicationContext, PrefUtils.PREF_NUM_TIMES_PERMISSIONS, numTimes + 1);
+    }
+
+    /**
+     * This function returns true if we should ask the user for permissions, false otherwise.
+     * At the moment we will ask three times.
+     * @return shouldAsk
+     */
+    public boolean shouldAskPermissions(){
+        int numTimes = PrefUtils.getFromPrefs(applicationContext, PrefUtils.PREF_NUM_TIMES_PERMISSIONS, 0);
+        return numTimes <= 4;
+    }
 }
