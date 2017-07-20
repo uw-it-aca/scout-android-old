@@ -14,7 +14,7 @@ import java.util.Set;
  * API reference : https://developer.android.com/reference/android/content/SharedPreferences.html
  * Created by ezturner on 8/23/16.
  */
-class PrefUtils {
+public class PrefUtils {
     /**
      * The portion of the URL representing a single campus.
      * Example: "seattle/"
@@ -27,6 +27,7 @@ class PrefUtils {
     final static String PREF_TECH_FILTER_TIME = "__tech_filter_saved_at__";
     final static String PREF_FOOD_FILTER = "__food_filter__";
     final static String PREF_FOOD_FILTER_TIME = "__food_filter_saved_at__";
+    final static String PREF_NUM_TIMES_PERMISSIONS = "__permissions_queried__";
 
     /**
      * Called to save supplied value in shared preferences against given key.
@@ -39,6 +40,20 @@ class PrefUtils {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         final SharedPreferences.Editor editor = prefs.edit();
         editor.putString(key, value);
+        editor.apply();
+    }
+
+    /**
+     * Called to save supplied value in shared preferences against given key.
+     *
+     * @param context Context of caller activity
+     * @param key     Key of value to save against
+     * @param value   Value to save
+     */
+    public static void saveToPrefs(Context context, String key, int value) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        final SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(key, value);
         editor.apply();
     }
 

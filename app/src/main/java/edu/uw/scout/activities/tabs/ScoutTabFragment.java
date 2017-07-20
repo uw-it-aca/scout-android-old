@@ -36,6 +36,8 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
     private TurbolinksView turbolinksView;
     private TurbolinksSession turbolinksSession;
     private long lastVisit;
+    private UserPreferences userPreferences;
+    private ScoutLocation scoutLocation;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -46,12 +48,23 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
         View rootView = inflater.inflate(
                 R.layout.fragment_collection_object, container, false);
         turbolinksView = (TurbolinksView) rootView.findViewById(R.id.turbolinks_view);
+
+        userPreferences = new UserPreferences(getActivity().getApplicationContext());
+        scoutLocation = ScoutLocation.getInstance();
+
+        if(scoutLocation == null){
+            scoutLocation = new ScoutLocation(getActivity().getApplicationContext());
+        }
+
         Scout scout = Scout.getInstance();
         if(scout == null) {
             turbolinksSession = TurbolinksSession.getDefault(getContext());
         } else {
             turbolinksSession = scout.getTurbolinksManager().getSession(getTabURL(), getContext());
         }
+
+
+        Log.d(LOG_TAG, "Logging Test!");
 
         return rootView;
     }
@@ -139,8 +152,6 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
 
     @Override
     public void visitCompleted() {
-        if(ScoutLocation.getInstance() != null)
-            ScoutLocation.getInstance().passLocation(turbolinksSession.getWebView());
 
     }
 
@@ -159,6 +170,14 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
 
     private String getTabURL(){
         int tabIndex = getArguments().getInt(TAB_ID);
-        return new UserPreferences(getActivity()).getTabURL(tabIndex);
+        String tabURL = userPreferences.getTabURL(tabIndex);
+
+        if(scoutLocation != null)
+            tabURL += scoutLocation.getLocationParams();
+
+        Log.d(LOG_TAG, "URL : " + tabURL);
+        return tabURL;
+
     }
+
 }

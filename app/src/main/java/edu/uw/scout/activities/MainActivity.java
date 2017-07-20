@@ -100,10 +100,16 @@ public class MainActivity extends ScoutActivity {
         // If we are on discover, hide the filter button
         handler.postDelayed(hideFilterIcon, 50);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Scout.getInstance().getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{"android.permission.ACCESS_FINE_LOCATION"}, LOCATION_REQ_CODE);
+        // If the ScoutLocation object exists, simply use the static version
+        if(ScoutLocation.getInstance() != null){
+            scoutLocation = ScoutLocation.getInstance();
         } else {
-            scoutLocation = new ScoutLocation();
+            scoutLocation = new ScoutLocation(getApplicationContext());
+        }
+
+        // If it doesn't, check for permissions
+        if (!ScoutLocation.hasPermissions(this)) {
+            ActivityCompat.requestPermissions(this, new String[]{"android.permission.ACCESS_FINE_LOCATION","android.permission.ACCESS_COARSE_LOCATION"}, LOCATION_REQ_CODE);
         }
 
     }
@@ -349,7 +355,7 @@ public class MainActivity extends ScoutActivity {
             case LOCATION_REQ_CODE:
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    scoutLocation = new ScoutLocation();
+                    scoutLocation.permissionGranted(getApplicationContext());
                 }
             }
     }
