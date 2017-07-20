@@ -1,29 +1,28 @@
 package edu.uw.scout.activities;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.basecamp.turbolinks.TurbolinksAdapter;
 import com.basecamp.turbolinks.TurbolinksSession;
 
 import edu.uw.scout.Scout;
-import edu.uw.scout.services.TurbolinksSessionManager;
 import edu.uw.scout.utils.ErrorHandler;
+import edu.uw.scout.utils.ScoutLocation;
 import edu.uw.scout.utils.UserPreferences;
 
 /**
  * A superclass for turbolinks activities containing common variables and implementing stub
  * methods for TurbolinksAdapter.
  */
-public class ScoutActivity extends AppCompatActivity implements TurbolinksAdapter{
+public class ScoutActivity extends AppCompatActivity implements TurbolinksAdapter {
 
     private static final String LOG_TAG = ScoutActivity.class.getSimpleName();
     protected UserPreferences userPreferences;
     protected TurbolinksSession turbolinksSession;
     protected String location;
+    protected ScoutLocation scoutLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -31,6 +30,11 @@ public class ScoutActivity extends AppCompatActivity implements TurbolinksAdapte
         userPreferences = new UserPreferences(this);
 
         location = getIntent().getStringExtra(CONSTANTS.INTENT_URL_KEY);
+        scoutLocation = ScoutLocation.getInstance();
+
+        if(scoutLocation != null)
+            location += scoutLocation.getLocationParams();
+
         Scout scout = Scout.getInstance();
         if(scout == null) {
             turbolinksSession = TurbolinksSession.getDefault(this);
@@ -88,5 +92,4 @@ public class ScoutActivity extends AppCompatActivity implements TurbolinksAdapte
     public void visitProposedToLocationWithAction(String location, String action) {
 
     }
-
 }
