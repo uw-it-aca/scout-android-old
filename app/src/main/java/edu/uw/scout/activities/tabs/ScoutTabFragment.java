@@ -63,8 +63,8 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
             turbolinksSession = scout.getTurbolinksManager().getSession(getTabURL(), getContext());
         }
 
+        turbolinksSession.setPullToRefreshEnabled(false);
 
-        Log.d(LOG_TAG, "Logging Test!");
 
         return rootView;
     }
@@ -175,9 +175,11 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
         if(scoutLocation != null)
             tabURL += scoutLocation.getLocationParams();
 
-        Log.d(LOG_TAG, "URL : " + tabURL);
         return tabURL;
+    }
 
+    public void refresh(){
+        turbolinksSession.getWebView().loadUrl(url);
     }
 
 }

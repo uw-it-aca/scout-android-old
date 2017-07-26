@@ -103,7 +103,6 @@ public class ScoutLocation implements GoogleApiClient.ConnectionCallbacks
     public void onConnected(@Nullable Bundle bundle) {
         if (ActivityCompat.checkSelfPermission(Scout.getInstance().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(Scout.getInstance().getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Log.d(LOG_TAG, "onConnected called");
             currentLocation = LocationServices.FusedLocationApi.getLastLocation(
                     googleApiClient);
             if(currentLocation == null)
@@ -161,7 +160,6 @@ public class ScoutLocation implements GoogleApiClient.ConnectionCallbacks
      */
     public String getLocationParams(){
         if(currentLocation == null) {
-            Log.e(LOG_TAG, "LocationParams error!");
             return "";
         }
 

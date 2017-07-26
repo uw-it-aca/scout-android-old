@@ -187,6 +187,7 @@ public class MainActivity extends ScoutActivity {
             Log.d(LOG_TAG, "Null Pointer Exception thrown when altering tab icons!");
         }
 
+        tabPosition = tabSelected;
         // change the title
         changeTitle(tabSelected);
     }
@@ -345,9 +346,6 @@ public class MainActivity extends ScoutActivity {
         return campusURL + "study/filter/";
     }
 
-
-
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                               int[] grantResults){
@@ -358,6 +356,11 @@ public class MainActivity extends ScoutActivity {
                     scoutLocation.permissionGranted(getApplicationContext());
                 }
             }
+    }
+
+    @Override
+    public void refresh(){
+        ((ScoutTabFragment) scoutTabAdapter.getItem(tabPosition)).refresh();
     }
 
 }

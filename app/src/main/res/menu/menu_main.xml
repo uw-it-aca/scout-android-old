@@ -4,15 +4,21 @@
     tools:context=".activities.MainActivity">
     <item
         android:id="@+id/action_campus"
-        android:orderInCategory="80"
+        android:orderInCategory="10"
         android:title="@string/action_settings"
         android:icon="@drawable/ic_school_white_24dp"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_filter"
-        android:orderInCategory="90"
+        android:orderInCategory="50"
         android:title="@string/action_filter"
         android:icon="@drawable/ic_filter_list_white_24dp"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_refresh"
+        android:orderInCategory="70"
+        android:title="@string/action_filter"
+        android:icon="@drawable/ic_refresh_white_24dp"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_settings"
