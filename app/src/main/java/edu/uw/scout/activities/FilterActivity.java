@@ -19,6 +19,7 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import edu.uw.scout.R;
+import edu.uw.scout.utils.UserPreferences;
 
 public class FilterActivity extends ScoutActivity {
 
@@ -43,17 +44,15 @@ public class FilterActivity extends ScoutActivity {
 
         ButterKnife.bind(this);
 
+        turbolinksSession.setScreenshotsEnabled(false);
+        turbolinksSession.restoreWithCachedSnapshot(false);
         turbolinksView = (TurbolinksView) findViewById(R.id.turbolinks_view);
 
         location = getIntent().getStringExtra(CONSTANTS.INTENT_URL_KEY);
         filterType = getIntent().getIntExtra(CONSTANTS.FILTER_TYPE_KEY, 1);
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
+        queryParams = userPreferences.getFilter(filterType);
+        Log.d(LOG_TAG, "Initial Filter Type " + filterType + " and query params: " + queryParams) ;
 
         turbolinksSession.addJavascriptInterface(this, "scoutBridge");
         turbolinksSession.progressView(LayoutInflater.from(this).inflate(com.basecamp.turbolinks.R.layout.turbolinks_progress, turbolinksView, false), com.basecamp.turbolinks.R.id.turbolinks_default_progress_indicator, Integer.MAX_VALUE)
@@ -113,30 +112,33 @@ public class FilterActivity extends ScoutActivity {
 
     @Override
     public void onBackPressed(){
-        submitForm();
         super.onBackPressed();
+    }
+
+    public void submitFilters(View view){
+        onBackPressed();
     }
 
     /**
      * Retrieve the filter URL from the app and then 
      */
-    private void submitForm(){
+    private void submitForm(String params){
         switch (filterType){
             case 1:
-                userPreferences.saveFoodFilter(queryParams);
+                userPreferences.saveFoodFilter(params);
                 break;
             case 2:
-                userPreferences.saveStudyFilter(queryParams);
+                userPreferences.saveStudyFilter(params);
                 break;
             case 3:
-                userPreferences.saveTechFilter(queryParams);
+                userPreferences.saveTechFilter(params);
                 break;
         }
     }
 
     @JavascriptInterface
     public void setParams(String params){
-        this.queryParams = params;
+        submitForm(params);
     }
 
 }

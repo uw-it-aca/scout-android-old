@@ -323,8 +323,15 @@ public class MainActivity extends ScoutActivity {
                         if (campusIndex != which) {
                             campusIndex = which;
                             userPreferences.setCampusByIndex(which);
-                            onPause();
-                            onResume();
+
+                            Log.d(LOG_TAG, "Reloading tabs");
+
+                            for (int i = 0; i < scoutTabAdapter.getCount(); i++) {
+                                ScoutTabFragment fragment = (ScoutTabFragment) scoutTabAdapter.getItem(i);
+
+                                if (fragment.getActivity() != null)
+                                    fragment.reloadTab();
+                            }
                         }
                     }
 

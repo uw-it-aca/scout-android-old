@@ -4,7 +4,7 @@
     <string name="action_filter">Filter</string>
     <string name="action_done">Done</string>
 
-    <string name="scout_url">http://scout-test.s.uw.edu/h/</string>
+    <string name="scout_url">https://scout-test.s.uw.edu/h/</string>
     <!-- <string name="scout_url">http://34.209.70.43:7001/h/</string> -->
 
 
@@ -23,6 +23,7 @@
     <string name="pref_campus_key">__pref_campus__</string>
     <string name="pref_title_campus">Campus</string>
     <string name="choose_campus">Campus</string>
+    <string name="not_found">Not Found</string>
     <string name="campus_chooser_negative_text">Cancel</string>
     <string name="campus_chooser_positive_text">Choose</string>
     <string name="action_clear">Clear</string>

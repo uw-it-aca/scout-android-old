@@ -88,6 +88,8 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
                 .view(turbolinksView)
                 .visit(url);
 
+        lastVisit = System.currentTimeMillis();
+
     }
 
     @Override
@@ -97,16 +99,24 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
     }
 
     public void reloadTab(){
-        if(System.currentTimeMillis() - lastVisit <  150|| (url != null && url.equals(getTabURL())))
+        if(System.currentTimeMillis() - lastVisit <  150) {
+            Log.d(LOG_TAG, "Not visiting");
             return;
+        }
 
-        url = getTabURL();
+        if(url.equals(getTabURL())){
+            refresh();
+        } else {
+            url = getTabURL();
+            Log.d(LOG_TAG, url);
+            turbolinksSession
+                    .activity(getActivity())
+                    .adapter(this)
+                    .view(turbolinksView)
+                    .visit(url);
+        }
+        lastVisit = System.currentTimeMillis();
 
-        turbolinksSession
-                .activity(getActivity())
-                .adapter(this)
-                .view(turbolinksView)
-                .visit(url);
 
     }
 
@@ -136,7 +146,7 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
         switch (statusCode){
             case 404:
                 new MaterialDialog.Builder(getContext())
-                        .title(R.string.choose_campus)
+                        .title(R.string.not_found)
                         .positiveText(R.string.action_okay)
                         .onAny(new MaterialDialog.SingleButtonCallback() {
                             @Override
