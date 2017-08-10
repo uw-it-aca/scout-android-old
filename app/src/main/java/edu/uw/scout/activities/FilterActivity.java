@@ -78,7 +78,7 @@ public class FilterActivity extends ScoutActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_clear) {
-            queryParams = "";
+            submitForm("");
             onBackPressed();
             return true;
         } else if (id == android.R.id.home) {

@@ -164,7 +164,7 @@ public class ScoutLocation implements GoogleApiClient.ConnectionCallbacks
         }
 
         String locationParams = "";
-        locationParams += "?h_lat=" + currentLocation.getLatitude();
+        locationParams += "h_lat=" + currentLocation.getLatitude();
         locationParams += "&h_lng=" + currentLocation.getLongitude();
 
         return locationParams;
