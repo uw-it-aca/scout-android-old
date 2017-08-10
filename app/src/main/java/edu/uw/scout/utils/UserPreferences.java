@@ -76,8 +76,11 @@ public class UserPreferences {
         String params = getFilterParams(tab);
         Log.d(LOG_TAG, "Parameters are: " + params);
 
+        if(!url.contains("?"))
+            url += "?";
+
         if(!params.equals(""))
-            url += "?" + params;
+            url += params;
 
         return url;
     }

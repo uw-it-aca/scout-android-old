@@ -45,7 +45,6 @@ public class FilterActivity extends ScoutActivity {
         ButterKnife.bind(this);
 
         turbolinksSession.setScreenshotsEnabled(false);
-        turbolinksSession.restoreWithCachedSnapshot(false);
         turbolinksView = (TurbolinksView) findViewById(R.id.turbolinks_view);
 
         location = getIntent().getStringExtra(CONSTANTS.INTENT_URL_KEY);

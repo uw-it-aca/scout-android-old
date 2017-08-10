@@ -344,11 +344,11 @@ public class MainActivity extends ScoutActivity {
         String campusURL = userPreferences.getCampusURL();
         switch (tabLayout.getSelectedTabPosition()) {
             case 1:
-                return campusURL + "food/filter/";
+                return campusURL + "food/filter/?" + userPreferences.getFoodFilter();
             case 2:
-                return campusURL + "study/filter/";
+                return campusURL + "study/filter/?" + userPreferences.getStudyFilter();
             case 3:
-                return campusURL + "tech/filter/";
+                return campusURL + "tech/filter/?" + userPreferences.getTechFilter();
         }
         return campusURL + "study/filter/";
     }

@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">Scout</string>
+    <string name="app_name">UW Scout</string>
     <string name="action_settings">Settings</string>
     <string name="action_filter">Filter</string>
     <string name="action_done">Done</string>
 
     <string name="scout_url">https://scout-test.s.uw.edu/h/</string>
-    <!-- <string name="scout_url">http://34.209.70.43:7001/h/</string> -->
+    <!-- <string name="scout_url">http://ketchup.aca.uw.edu:8002/h/</string> -->
 
 
     <string name="title_activity_detail">Scout</string>
