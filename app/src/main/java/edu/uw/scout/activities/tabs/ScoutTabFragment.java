@@ -183,8 +183,11 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
         String tabURL = userPreferences.getTabURL(tabIndex);
 
         if(scoutLocation != null) {
-            if (!tabURL.contains("?"))
+            if (!tabURL.contains("?")) {
                 tabURL += "?";
+            } else {
+                tabURL += "&";
+            }
 
             tabURL += scoutLocation.getLocationParams();
         }
