@@ -79,8 +79,9 @@ public class ScoutActivity extends AppCompatActivity implements TurbolinksAdapte
             case 404:
                 turbolinksSession.getWebView().loadUrl("about:blank");
                 ErrorHandler.show404(this);
-                break;
+                return;
         }
+        ErrorHandler.showUncaught(this);
     }
 
     @Override
@@ -93,8 +94,9 @@ public class ScoutActivity extends AppCompatActivity implements TurbolinksAdapte
         switch (statusCode){
             case 404:
                 ErrorHandler.show404(this);
-                break;
+                return;
         }
+        ErrorHandler.showUncaught(this);
     }
 
     @Override

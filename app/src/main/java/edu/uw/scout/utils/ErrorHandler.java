@@ -28,4 +28,18 @@ public class ErrorHandler {
                 })
                 .show();
     }
+
+    public static void showUncaught(final Activity activity){
+        new MaterialDialog.Builder(activity)
+                .title(R.string.error_requesting)
+                .content(R.string.unknown_error)
+                .neutralText(R.string.action_okay)
+                .onAny(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        activity.onBackPressed();
+                    }
+                })
+                .show();
+    }
 }

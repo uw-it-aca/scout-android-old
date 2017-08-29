@@ -5,7 +5,7 @@
     <string name="action_done">Done</string>
 
     <string name="scout_url">https://scout-test.s.uw.edu/h/</string>
-    <!-- <string name="scout_url">http://ketchup.aca.uw.edu:8002/h/</string> -->
+    <!-- <string name="scout_url">http://coconut.aca.uw.edu:8001/h/</string> -->
 
 
     <string name="title_activity_detail">Scout</string>
@@ -36,5 +36,6 @@
     <string name="action_okay">OK</string>
     <string name="temporarily_unavailable">This data is temporarily unavailable. Please try again later.</string>
     <string name="error_requesting">Error Requesting Data</string>
+    <string name="unknown_error">There was a problem on our end. Our developers have been alerted of this issue and are working to fix the problem.</string>
 
 </resources>
