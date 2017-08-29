@@ -270,10 +270,10 @@ public class MainActivity extends ScoutActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        /*if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
-        } else if (id == R.id.action_filter) {
+        } else */if (id == R.id.action_filter) {
             Intent filterIntent = new Intent(this, FilterActivity.class);
             filterIntent.putExtra(CONSTANTS.INTENT_URL_KEY, getFilterURL());
             filterIntent.putExtra(CONSTANTS.FILTER_TYPE_KEY, tabLayout.getSelectedTabPosition());
@@ -321,6 +321,7 @@ public class MainActivity extends ScoutActivity {
                 public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
                     if (which != -1) {
                         if (campusIndex != which) {
+                            userPreferences.deleteFilters();
                             campusIndex = which;
                             userPreferences.setCampusByIndex(which);
 

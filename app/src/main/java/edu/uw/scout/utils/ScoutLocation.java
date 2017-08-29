@@ -159,6 +159,9 @@ public class ScoutLocation implements GoogleApiClient.ConnectionCallbacks
      * @return locationParams
      */
     public String getLocationParams(){
+        // Disabling for v1
+        if(true)
+            return "";
         if(currentLocation == null) {
             return "";
         }
