@@ -72,4 +72,10 @@ public class DetailActivity extends ScoutActivity{
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(location));
         startActivity(browserIntent);
     }
+
+    @Override
+    protected void refresh(){
+        // Remove ? if present
+        turbolinksSession.getWebView().loadUrl(location.split("\\?")[0]);
+    }
 }
