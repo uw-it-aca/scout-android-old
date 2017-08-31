@@ -104,7 +104,7 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
             return;
         }
 
-        if(url.equals(getTabURL()) && System.currentTimeMillis() - lastVisit > 5000){
+        if(url.equals(getTabURL()) && System.currentTimeMillis() - lastVisit > 5 * 1000 * 60){
             refresh();
         } else {
             url = getTabURL();
