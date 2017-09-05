@@ -99,13 +99,19 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
     }
 
     public void reloadTab(){
+        Log.d(LOG_TAG, "reloadTab url: " + url);
         if(System.currentTimeMillis() - lastVisit <  150) {
             Log.d(LOG_TAG, "Not visiting");
             return;
         }
 
         if(!url.equals(getTabURL())){
-            Log.d(LOG_TAG, url);
+            Log.d(LOG_TAG, url + " != " + getTabURL());
+
+            if(url == "") {
+                url = getTabURL();
+            }
+
             turbolinksSession
                     .activity(getActivity())
                     .adapter(this)
@@ -120,6 +126,7 @@ public class ScoutTabFragment extends Fragment implements TurbolinksAdapter {
 
     @Override
     public void onDestroy(){
+        Log.d(LOG_TAG, "onDestroy url: " + url);
         super.onDestroy();
         url = "";
         lastVisit = System.currentTimeMillis();
