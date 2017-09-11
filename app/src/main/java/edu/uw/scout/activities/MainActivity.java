@@ -49,7 +49,7 @@ public class MainActivity extends ScoutActivity {
     private ScoutTabFragmentAdapter scoutTabAdapter;
     private Menu menu;
     private Handler handler;
-    private ScoutLocation scoutLocation;
+    //private ScoutLocation scoutLocation;
     private static final int LOCATION_REQ_CODE = 1592;
 
     @Override
@@ -101,6 +101,7 @@ public class MainActivity extends ScoutActivity {
         handler.postDelayed(hideFilterIcon, 50);
 
         // If the ScoutLocation object exists, simply use the static version
+        /* 9/6/17 - temporarily remove to prevent asking permission on install
         if(ScoutLocation.getInstance() != null){
             scoutLocation = ScoutLocation.getInstance();
         } else {
@@ -111,6 +112,7 @@ public class MainActivity extends ScoutActivity {
         if (!ScoutLocation.hasPermissions(this)) {
             ActivityCompat.requestPermissions(this, new String[]{"android.permission.ACCESS_FINE_LOCATION","android.permission.ACCESS_COARSE_LOCATION"}, LOCATION_REQ_CODE);
         }
+        */
 
     }
 
@@ -354,6 +356,7 @@ public class MainActivity extends ScoutActivity {
         return campusURL + "study/filter/";
     }
 
+    /* 9/6/17 - temporarily remove to prevent asking permission on install
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                               int[] grantResults){
@@ -365,6 +368,7 @@ public class MainActivity extends ScoutActivity {
                 }
             }
     }
+    */
 
     @Override
     public void refresh(){

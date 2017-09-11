@@ -36,7 +36,8 @@ public class Scout extends Application {
         sessionManager = new TurbolinksSessionManager();
         userPreferences = new UserPreferences(this);
 
-        scoutLocation = new ScoutLocation(getApplicationContext());
+        // temporary removal for initial release - 9/7/17
+        //scoutLocation = new ScoutLocation(getApplicationContext());
     }
 
     public UserPreferences getPreferences(){
